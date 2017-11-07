@@ -1,6 +1,8 @@
 %:- include('Utils.pl').
 %:- include('Menus.pl').
 :- include('Board.pl').
+:- include('Utils.pl').
+%:- include('Logic.pl').
 
 
 %                                %
