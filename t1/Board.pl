@@ -5,6 +5,8 @@ board([
   [null,null,null,null,null,null,null,null,null],
   [null,null,null,null,null,null,null,null,null],
   [null,null,null,null,null,null,null,null,null],
+  [null,null,null,null,null,null,null,null,null],
+  [null,null,null,null,null,null,null,null,null],
   [null,null,null,null,null,null,null,null,null]
 ]).
 
@@ -26,19 +28,12 @@ init_board(C, R, [H|T]) :-
 
 display_walls(S):-
     S > 0,
-    S < 9,
+    S < 10,
     S1 is S + 1,
     write('|'),
     write('  '),
     write('|'),
     display_walls(S1).
 
-display_walls(S):-
-    S > 0,
-    S1 is S + 1,
-    write('|'),
-    write(' '),
-    write('|'),
-    display_walls(S1).
 
 display_walls(S):-nl.
