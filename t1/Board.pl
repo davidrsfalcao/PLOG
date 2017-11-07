@@ -116,6 +116,7 @@ translate('2_sudoeste', '<V2').
 
 
 display_board():-
+    clearScreen,
     writef('╔═══╦═══╦═══╗   ╔═══╦═══╦═══╗   ╔═══╦═══╦═══╗'),
     nl,
     display_board(1,1).

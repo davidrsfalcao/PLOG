@@ -16,5 +16,5 @@
 
 
 azacru :-
-	create_board(),
-	display_board().
+	create_board,
+	display_board.
