@@ -1,6 +1,6 @@
-:- include('Menus.pl').
+%:- include('Utils.pl').
+%:- include('Menus.pl').
 :- include('Board.pl').
-:- include('Utils.pl').
 
 
 %                                %
@@ -12,6 +12,7 @@
 %                                %
 
 
+
 azacru :-
-	clearScreen,
-	mainMenu.
+	create_board(),
+	display_board().
