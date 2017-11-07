@@ -12,5 +12,5 @@
 
 
 azacru :-
-	cleanScreen,
+	clearScreen,
 	mainMenu.
