@@ -125,4 +125,7 @@ tile_belongs_to_player(QUADRANT, LINE, COLUMN, PLAYER):-
     true.
 
 power_movement(QUADRANT, PLAYER, COUNT):-
-    aggregate_all(count, tile_belongs_to_player(QUADRANT, _, _, PLAYER), COUNT).
+    aggregate_all(count, tile_belongs_to_player(QUADRANT, _, _, PLAYER), COUNT),
+    (COUNT == 0 ->
+        COUNT is 1
+    ).

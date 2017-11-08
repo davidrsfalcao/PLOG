@@ -4,7 +4,7 @@
 :- include('Board/Interface.pl').
 :- include('Board/Quadrants.pl').
 :- include('Utils.pl').
-%:- include('Logic.pl').
+:- include('Logic.pl').
 
 
 %                                %
@@ -18,8 +18,11 @@
 
 
 azacru :-
+	assert(player(1,'HUMAN')),
+	assert(player(2,'HUMAN')),
 	create_board,
 	create_board_res,
 	display_board,
+	choose_piece(1),
 	clean_board,
 	clean_board_res.
