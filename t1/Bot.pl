@@ -35,15 +35,5 @@ bot_movement(PIECES):-
   bot_select_move(POSSIBLE_DIR,MOVEMENT_POWER,DIRECTION,MOV_POWER),
   move_piece_bot(PIECE,DIRECTION,MOV_POWER).
 
-possible_directions('n','ne','no').
-possible_directions('ne','n','e').
-possible_directions('e','ne','se').
-possible_directions('se','s','e').
-possible_directions('s','se','so').
-possible_directions('so','s','o').
-possible_directions('o','so','no').
-possible_directions('no','n','o').
-
 move_piece_bot(PIECE,DIRECTION,MOV_POWER):-
   %move a peça([line,column]) numa determinada direção com um determinado poder de movimento
-  
