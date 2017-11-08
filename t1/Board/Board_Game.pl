@@ -129,3 +129,39 @@ direction('2_ne','ne').
 direction('2_nw',nw).
 direction('2_se','se').
 direction('2_sw','sw').
+
+%possible_direction(atual direction, possible direction)
+possible_direction('n','n').
+possible_direction('n','ne').
+possible_direction('n','nw').
+possible_direction('s','s').
+possible_direction('s','se').
+possible_direction('s','sw').
+possible_direction('e','e').
+possible_direction('e','ne').
+possible_direction('e','se').
+possible_direction('w','w').
+possible_direction('w','nw').
+possible_direction('w','sw').
+possible_direction('ne','ne').
+possible_direction('ne','n').
+possible_direction('ne','e').
+possible_direction('se','se').
+possible_direction('se','s').
+possible_direction('se','e').
+possible_direction('sw','sw').
+possible_direction('sw','s').
+possible_direction('sw','w').
+possible_direction('nw','nw').
+possible_direction('nw','n').
+possible_direction('nw','w').
+
+position_is_empty(LINE, COLUMN):-
+    board(LINE,COLUMN,'null').
+
+position_is_free_to_move(PLAYER, LINE1, COLUMN1):-
+    quadrant(QQ, LINE1, COLUMN1),
+    (
+        tile_belongs_to_player(QQ, LINE1, COLUMN1, PLAYER);
+        position_is_empty(LINE1, COLUMN1)
+    ).
