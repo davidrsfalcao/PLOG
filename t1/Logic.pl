@@ -51,9 +51,27 @@ choose_column(COLUMN):-
 piece_belongs_to_player(PLAYER, LINE, COLUMN):-
     board(LINE, COLUMN, PIECE),
     piece(PIECE, PP),
-    PP == PLAYER.
+    PP =:= PLAYER.
 
+
+choose_position_to_move(PLAYER, LINE, COLUMN):-
+    nl,
+    repeat,
+    write('[PLAYER'),
+    write(PLAYER),
+    write('] Choose a position to move'),
+    choose_line(LINE),
+    choose_column(COLUMN),
+    !.
 
 move_piece(PLAYER, LINE, COLUMN):-
-    quadrant(QUADRANT, LINE, COLUMN),
-    power_movement(QUADRANT, PLAYER, POWER).
+    LINE_A is LINE,
+    COLUMN_A is COLUMN,
+    quadrant(QUADRANT, LINE_A, COLUMN_A),
+    power_movement(QUADRANT, PLAYER, POWER),
+    player(PLAYER, TYPE),
+    ( TYPE == 'HUMAN' ->
+        choose_position_to_move(PLAYER, LINE, COLUMN)
+        ; %bot
+        write("BOT")
+    ).
