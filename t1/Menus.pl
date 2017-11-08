@@ -37,7 +37,7 @@ read(R),R1 is R,R1<6,menu(R1).
 menu(X):-
     X==1,
     nl,
-    write(' PLAYER(Blue) VS PLAYER(Red) '),
+    write(' PLAYER(BLACK) VS PLAYER(WHITE) '),
     nl
     assert(player(1,'HUMAN')),
     assert(player(2,'HUMAN')).
@@ -48,13 +48,13 @@ menu(X):-
 % -----------------------------------------------------------------------
 
 menu(X):-X==2,nl,
-write(' PLAYER(Blue) VS CPU(Red) '),nl,nl.
+write(' PLAYER(BLACK) VS CPU(WHITE) '),nl,nl.
 % -----------------------------------------------------------------------
 % MENU 3 - CPU(BLACK) VS CPU(WHITE)
 % -----------------------------------------------------------------------
 
 menu(X):-X==3,nl,
-write(' CPU(Blue) VS CPU(Red) '),nl,nl.
+write(' CPU(BLACK) VS CPU(WHITE) '),nl,nl.
 
 % -----------------------------------------------------------------------
 % MENU 4 - HOW TO PLAY
@@ -68,12 +68,12 @@ write('|                                HOW TO PLAY                             
 write('|                                                                              |'),nl,
 write('|                                                                              |'),nl,
 write('|                                                                              |'),nl,
-write('| Get more pieces of your color all over the board to win.                     |'),nl,
-write('|                                                                              |'),nl,
-write('|                                                                              |'),nl,
-write('|                                                                              |'),nl,
-write('|                                                                              |'),nl,
-write('|                                                                              |'),nl,
+write('|  Get more pieces of your color all over the board to win.                    |'),nl,
+write('|  Choose which piece you want to move and where to move it.                   |'),nl,
+write('|  Everytime you "eat" an opponent piece your arrow will disappear.            |'),nl,
+write('|  When one of the players have no more pieces,the other can only make one     |'),nl,
+write('| more round.                                                                  |'),nl,
+write('|  You can move the number of tiles you have in the quadrant you are in.       |'),nl,
 write('|                                                                              |'),nl,
 write('|                                                                              |'),nl,
 write('|                                                                              |'),nl,
