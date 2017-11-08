@@ -117,7 +117,7 @@ quadrant(9,9,7).
 quadrant(9,9,8).
 quadrant(9,9,9).
 
-belongs_to_player(QUADRANT, LINE, COLUMN, PLAYER):-
+tile_belongs_to_player(QUADRANT, LINE, COLUMN, PLAYER):-
     quadrant(QQ,LINE,COLUMN),
     QQ == QUADRANT,
     board_res(LINE,COLUMN,PP),
@@ -125,4 +125,4 @@ belongs_to_player(QUADRANT, LINE, COLUMN, PLAYER):-
     true.
 
 power_movement(QUADRANT, PLAYER, COUNT):-
-    aggregate_all(count, belongs_to_player(QUADRANT, _, _, PLAYER), COUNT).
+    aggregate_all(count, tile_belongs_to_player(QUADRANT, _, _, PLAYER), COUNT).
