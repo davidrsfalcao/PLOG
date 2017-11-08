@@ -1,22 +1,22 @@
 translate('null', '   ').
-translate('1', ' 1 ').
-translate('2', ' 2 ').
-translate('1_este', '1 >').
-translate('1_oeste', '< 1').
-translate('1_norte', '1 ^').
-translate('1_sul', 'V 1').
-translate('1_nordeste', '1^>').
-translate('1_noroeste', '<^1').
-translate('1_sudeste', '1V>').
-translate('1_sudoeste', '<V1').
-translate('2_este', ' 2>').
-translate('2_oeste', '<2 ').
-translate('2_norte', '2 ^').
-translate('2_sul', 'V 2').
-translate('2_nordeste', '2^>').
-translate('2_noroeste', '<^2').
-translate('2_sudeste', '2V>').
-translate('2_sudoeste', '<V2').
+translate('1', '░░░').
+translate('2', '▓▓▓').
+translate('1_este', ' ▷ ').
+translate('1_oeste', ' ◁ ').
+translate('1_norte', ' △ ').
+translate('1_sul', ' ▽ ').
+translate('1_nordeste', ' ◹ ').
+translate('1_noroeste', ' ◸ ').
+translate('1_sudeste', ' ◿ ').
+translate('1_sudoeste', ' ◺ ').
+translate('2_este', ' ▶ ').
+translate('2_oeste', ' ◀ ').
+translate('2_norte', ' ▲ ').
+translate('2_sul', ' ▼ ').
+translate('2_nordeste', ' ◥ ').
+translate('2_noroeste', ' ◤ ').
+translate('2_sudeste', ' ◢ ').
+translate('2_sudoeste', ' ◣ ').
 
 display_board():-
     clearScreen,
