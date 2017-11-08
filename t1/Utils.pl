@@ -9,3 +9,6 @@ newLine(Line, Limit) :-
 	newLine(LineInc, Limit).
 
 newLine(_,_).
+
+ascii_to_dec(N,N1):-
+	N1 is N-48.

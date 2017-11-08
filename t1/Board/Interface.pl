@@ -1,22 +1,22 @@
 translate('null', '   ').
 translate('1', '░░░').
 translate('2', '▓▓▓').
-translate('1_este', ' ▷ ').
-translate('1_oeste', ' ◁ ').
-translate('1_norte', ' △ ').
-translate('1_sul', ' ▽ ').
-translate('1_nordeste', ' ◹ ').
-translate('1_noroeste', ' ◸ ').
-translate('1_sudeste', ' ◿ ').
-translate('1_sudoeste', ' ◺ ').
-translate('2_este', ' ▶ ').
-translate('2_oeste', ' ◀ ').
-translate('2_norte', ' ▲ ').
-translate('2_sul', ' ▼ ').
-translate('2_nordeste', ' ◥ ').
-translate('2_noroeste', ' ◤ ').
-translate('2_sudeste', ' ◢ ').
-translate('2_sudoeste', ' ◣ ').
+translate('1_e', ' ▷ ').
+translate('1_w', ' ◁ ').
+translate('1_n', ' △ ').
+translate('1_s', ' ▽ ').
+translate('1_ne', ' ◹ ').
+translate('1_nw', ' ◸ ').
+translate('1_se', ' ◿ ').
+translate('1_sw', ' ◺ ').
+translate('2_e', ' ▶ ').
+translate('2_w', ' ◀ ').
+translate('2_n', ' ▲ ').
+translate('2_s', ' ▼ ').
+translate('2_ne', ' ◥ ').
+translate('2_nw', ' ◤ ').
+translate('2_se', ' ◢ ').
+translate('2_sw', ' ◣ ').
 
 display_board():-
     clearScreen,
