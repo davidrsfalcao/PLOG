@@ -7,7 +7,7 @@ clean_players():-
 choose_piece(PLAYER, LINE, COLUMN):-
     repeat,
     nl,
-    write('[PLAYER'),
+    write('[PLAYER '),
     write(PLAYER),
     write('] Choose a piece to play'),
     choose_line(LINE),
@@ -51,13 +51,13 @@ choose_column(COLUMN):-
 piece_belongs_to_player(PLAYER, LINE, COLUMN):-
     board(LINE, COLUMN, PIECE),
     piece(PIECE, PP),
-    PP =:= PLAYER.
+    PP == PLAYER.
 
 
 choose_position_to_move(PLAYER, LINE, COLUMN):-
     nl,
     nl,
-    write('[PLAYER'),
+    write('[PLAYER '),
     write(PLAYER),
     write('] Choose a position to move'),
     choose_line(LINE),
@@ -70,8 +70,53 @@ move_piece(PLAYER, LINE, COLUMN):-
     quadrant(QUADRANT, LINE_A, COLUMN_A),
     power_movement(QUADRANT, PLAYER, POWER),
     player(PLAYER, TYPE),
+    repeat,
     ( TYPE == 'HUMAN' ->
         choose_position_to_move(PLAYER, LINE1, COLUMN1)
         ; %bot
         write("BOT")
+    ),
+    (verify_movement(PLAYER, LINE_A, COLUMN_A, LINE1, COLUMN1, POWER) ->
+        !
+        ; fail
     ).
+
+calculate_direction(LINE_A, COLUMN_A, LINE1, COLUMN1, DIR):-
+    D_YY is LINE_A - LINE1,
+    ( D_YY == 0 ->
+        D_Y is 0
+        ;
+        ( D_YY > 0 ->
+            D_Y is 1
+            ;
+            D_Y is -1
+        )
+    ),
+    D_XX is COLUMN1 - COLUMN_A,
+    ( D_XX == 0 ->
+        D_X is 0
+        ;
+        ( D_XX > 0 ->
+            D_X is 1
+            ;
+            D_X is -1
+        )
+    ),
+    direction_mov(D_Y, D_X, DIR).
+
+
+
+
+verify_movement(PLAYER, LINE_A, COLUMN_A, LINE1, COLUMN1, POWER):-
+    DIF_L is LINE_A - LINE1,
+    abs(DIF_L, X),
+    X =< POWER,
+    DIF_C is COLUMN_A - COLUMN1,
+    abs(DIF_C, Y),
+    Y =< POWER,
+    (X == Y; X == 0; Y == 0),
+    calculate_direction(LINE_A, COLUMN_A, LINE1, COLUMN1, DIR),
+    board(LINE_A, COLUMN_A, PIECE),
+    direction(PIECE,DIR_A),
+    possible_direction(DIR_A, DIR),
+    position_is_free_to_move(PLAYER, LINE1, COLUMN1).
