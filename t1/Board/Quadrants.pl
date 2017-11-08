@@ -121,11 +121,14 @@ tile_belongs_to_player(QUADRANT, LINE, COLUMN, PLAYER):-
     quadrant(QQ,LINE,COLUMN),
     QQ == QUADRANT,
     board_res(LINE,COLUMN,PP),
-    PP == PLAYER,
-    true.
+    PP == PLAYER.
 
 power_movement(QUADRANT, PLAYER, COUNT):-
     aggregate_all(count, tile_belongs_to_player(QUADRANT, _, _, PLAYER), COUNT),
-    (COUNT == 0 ->
-        COUNT is 1
-    ).
+    CC is COUNT;
+    ( CC == 0 ->
+        CC = 1
+        ;
+        CC = COUNT
+    ),
+    COUNT = CC.

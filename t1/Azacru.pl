@@ -23,6 +23,8 @@ azacru :-
 	create_board,
 	create_board_res,
 	display_board,
-	choose_piece(1),
+	choose_piece(1,LINE, COLUMN),
+	move_piece(1, LINE, COLUMN),
+	clean_players(),
 	clean_board,
 	clean_board_res.
