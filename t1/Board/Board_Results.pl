@@ -94,3 +94,9 @@ create_board_res():-
 
 clean_board_res():-
     retractall(board_res(_,_,_)).
+
+tile_belongs_to_player(QUADRANT, LINE, COLUMN, PLAYER):-
+    quadrant(QQ,LINE,COLUMN),
+    QQ == QUADRANT,
+    board_res(LINE,COLUMN,PP),
+    PP == PLAYER.
