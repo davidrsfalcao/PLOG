@@ -56,7 +56,7 @@ piece_belongs_to_player(PLAYER, LINE, COLUMN):-
 
 choose_position_to_move(PLAYER, LINE, COLUMN):-
     nl,
-    repeat,
+    nl,
     write('[PLAYER'),
     write(PLAYER),
     write('] Choose a position to move'),
@@ -71,7 +71,7 @@ move_piece(PLAYER, LINE, COLUMN):-
     power_movement(QUADRANT, PLAYER, POWER),
     player(PLAYER, TYPE),
     ( TYPE == 'HUMAN' ->
-        choose_position_to_move(PLAYER, LINE, COLUMN)
+        choose_position_to_move(PLAYER, LINE1, COLUMN1)
         ; %bot
         write("BOT")
     ).
