@@ -127,8 +127,6 @@ power_movement(QUADRANT, PLAYER, COUNT):-
     aggregate_all(count, tile_belongs_to_player(QUADRANT, _, _, PLAYER), COUNT),
     CC is COUNT;
     ( CC == 0 ->
-        CC = 1
-        ;
-        CC = COUNT
+        CC is 1
     ),
-    COUNT = CC.
+    COUNT is CC.
