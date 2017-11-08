@@ -117,16 +117,10 @@ quadrant(9,9,7).
 quadrant(9,9,8).
 quadrant(9,9,9).
 
-tile_belongs_to_player(QUADRANT, LINE, COLUMN, PLAYER):-
-    quadrant(QQ,LINE,COLUMN),
-    QQ == QUADRANT,
-    board_res(LINE,COLUMN,PP),
-    PP == PLAYER.
 
 power_movement(QUADRANT, PLAYER, COUNT):-
-    aggregate_all(count, tile_belongs_to_player(QUADRANT, _, _, PLAYER), COUNT),
-    CC is COUNT;
+    aggregate_all(count, tile_belongs_to_player(QUADRANT, _, _, PLAYER), CC),
     ( CC == 0 ->
-        CC is 1
-    ),
-    COUNT is CC.
+        COUNT is CC +1
+        ; COUNT is CC
+    ).
