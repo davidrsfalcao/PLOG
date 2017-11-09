@@ -30,3 +30,8 @@ azacru :-
 	clean_board,
 	clean_board_res,
 	!.
+
+	%% TIRAR ISTO TUDO DAQUI E METER NUM CICLO
+	%% RECURSIVO DENTRO DA Logic
+	%%
+	%% AQUI DEVEM SER CHAMADOS OS MENUS

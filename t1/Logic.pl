@@ -94,6 +94,7 @@ move_piece(PLAYER, LINE, COLUMN):-
         )
     ),
 
+    % FALTA VER AS PEÇAS DO MEIO
 
     retract(board_res(LINE1, COLUMN1, _)),
     ( PLAYER == 1 ->
@@ -146,3 +147,4 @@ verify_movement(PLAYER, LINE_A, COLUMN_A, LINE1, COLUMN1, POWER, DIR):-
     direction(PIECE,DIR_A),
     possible_direction(DIR_A, DIR),
     position_is_free_to_move(PLAYER, LINE1, COLUMN1).
+    %% FALTA VERIFICAR SE NÃO HÁ PEÇAS PELO CAMINHO
