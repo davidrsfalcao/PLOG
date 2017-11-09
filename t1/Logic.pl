@@ -20,7 +20,10 @@ choose_piece(PLAYER, LINE, COLUMN):-
         nl,
         fail
     ),
-    possible_moves_piece(LINE, COLUMN, _).
+    %possible_moves_piece(LINE, COLUMN),
+    all_possible_moves,
+    nb_getval(list_movements, LB),
+    write(LB),nl.
     %write("COUNTER: "),
     %write(COUNTER).
 
@@ -56,7 +59,6 @@ piece_belongs_to_player(PLAYER, LINE, COLUMN):-
     board(LINE, COLUMN, PIECE),
     piece(PIECE, PP),
     PP == PLAYER.
-
 
 choose_position_to_move(PLAYER, LINE, COLUMN):-
     nl,
@@ -110,7 +112,6 @@ move_piece(PLAYER, LINE, COLUMN):-
     (direction(PIECE2,DIR_A), piece(PIECE2, PLAYER)),
     assert(board(LINE1, COLUMN1,PIECE2)).
 
-
 calculate_direction(LINE_A, COLUMN_A, LINE1, COLUMN1, DIR):-
     D_YY is LINE_A - LINE1,
     ( D_YY == 0 ->
@@ -134,7 +135,6 @@ calculate_direction(LINE_A, COLUMN_A, LINE1, COLUMN1, DIR):-
     ),
     direction_mov(D_Y, D_X, DIR).
 
-
 verify_movement(PLAYER, LINE_A, COLUMN_A, LINE1, COLUMN1, POWER, DIR):-
     DIF_L is LINE_A - LINE1,
     abs(DIF_L, X),
@@ -150,12 +150,12 @@ verify_movement(PLAYER, LINE_A, COLUMN_A, LINE1, COLUMN1, POWER, DIR):-
     position_is_free_to_move(PLAYER, LINE1, COLUMN1).
     %% FALTA VERIFICAR SE NÃO HÁ PEÇAS PELO CAMINHO
 
-possible_moves_piece(LINE, COLUMN, LIST_MOVE):-
+possible_moves_piece(LINE, COLUMN):-
     board(LINE, COLUMN, PIECE),
     piece(PIECE, PLAYER),
     quadrant(QUADRANT, LINE, COLUMN),
     power_movement(QUADRANT, PLAYER, POWER),
-    nb_setval(list_movements, [[]]),
+    nb_setval(list_movements_piece, [[]]),
     % VERIFICA SE O LIMITE ESQUERDO É MAIOR QUE 0
     LL1 is COLUMN - POWER,
     ( LL1 < 1 ->
@@ -199,19 +199,19 @@ possible_moves_piece(LINE, COLUMN, LIST_MOVE):-
             ;
             fail
         ),
-    nb_getval(list_movements, LIST_TMP),
-    nth0(0, LIST_TMP, ELEM),
-    delete(LIST_TMP, ELEM, LIST_MOVE),
-    write(LIST_MOVE),nl.
+        nb_getval(list_movements_piece, LIST_TMP),
+        nth0(0, LIST_TMP, ELEM),
+        delete(LIST_TMP, ELEM, LIST_MOVE),
+        nb_setval(list_movements_piece, LIST_MOVE).
 
 possible_moves_piece_line(PLAYER, LINE, COLUMN, L, POWER, LR, LL):-
     repeat,
         nb_getval(cont_c, C),
         (verify_movement(PLAYER, LINE, COLUMN, L, C, POWER, _) ->
             make_list_of_move(PLAYER, LINE, COLUMN, L, C, RESULT),
-            nb_getval(list_movements, TEMP),
-            add_list(TEMP, RESULT, FINAL),
-            nb_setval(list_movements, FINAL),
+            nb_getval(list_movements_piece, TMP),
+            add_list(TMP, RESULT, FINAL),
+            nb_setval(list_movements_piece, FINAL),
             K is C + 1,
             nb_setval(cont_c, K)
             ;
@@ -228,4 +228,51 @@ possible_moves_piece_line(PLAYER, LINE, COLUMN, L, POWER, LR, LL):-
             ;
             fail
         ),
-        !.
+    !.
+
+all_possible_moves:-
+    nb_setval(list_movements, [[]]),
+    nb_setval(cont_ll, 1),
+    nb_setval(cont_cc, 1),
+    repeat,
+        all_possible_moves_line,
+        nb_getval(cont_ll, H),
+        ( H > 9 ->
+            !
+            ;
+            fail
+        ),
+    !,
+    nb_getval(list_movements, LIST_TMP),
+    nth0(0, LIST_TMP, ELEM),
+    delete(LIST_TMP, ELEM, LIST_MOVE),
+    nb_setval(list_movements, LIST_MOVE).
+
+all_possible_moves_line:-
+    nb_getval(cont_ll, L),
+    repeat,
+        nb_getval(cont_cc, C),
+        board(L, C, PIECE),
+        ((piece(PIECE,1) ; piece(PIECE,2)) ->
+            possible_moves_piece(L, C),
+            nb_getval(list_movements_piece, TMP),
+            nb_getval(list_movements, LISTAA),
+            append(LISTAA, TMP, FINAL),
+            nb_setval(list_movements, FINAL),
+            K is C + 1,
+            nb_setval(cont_cc, K)
+            ;
+            K is C + 1,
+            nb_setval(cont_cc, K)
+        ),
+        nb_getval(cont_cc, C2),
+        ( C2 > 9 ->
+            nb_setval(cont_cc, 1),
+            nb_getval(cont_ll, I),
+            J is I+1,
+            nb_setval(cont_ll, J),
+            !
+            ;
+            fail
+        ),
+    !.

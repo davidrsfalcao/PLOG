@@ -83,7 +83,7 @@ create_board_res:-
 
     assert(board_res(9,1,0)),
     assert(board_res(9,2,0)),
-    assert(board_res(9,3,1)),
+    assert(board_res(9,3,0)),
     assert(board_res(9,4,0)),
     assert(board_res(9,5,0)),
     assert(board_res(9,6,0)),
