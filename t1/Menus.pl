@@ -37,7 +37,7 @@ read(R),R1 is R,R1<6,menu(R1).
 menu(X):-
     X==1,
     nl,
-    write(' PLAYER(BLACK) VS PLAYER(WHITE) '),
+    write(' PLAYER(WHITE) VS PLAYER(BLACK) '),
     nl
     assert(player(1,'HUMAN')),
     assert(player(2,'HUMAN')).
@@ -48,13 +48,13 @@ menu(X):-
 % -----------------------------------------------------------------------
 
 menu(X):-X==2,nl,
-write(' PLAYER(BLACK) VS CPU(WHITE) '),nl,nl.
+write(' PLAYER(WHITE) VS CPU(BLACK) '),nl,nl.
 % -----------------------------------------------------------------------
 % MENU 3 - CPU(BLACK) VS CPU(WHITE)
 % -----------------------------------------------------------------------
 
 menu(X):-X==3,nl,
-write(' CPU(BLACK) VS CPU(WHITE) '),nl,nl.
+write(' CPU(WHITE) VS CPU(BLACK) '),nl,nl.
 
 % -----------------------------------------------------------------------
 % MENU 4 - HOW TO PLAY
