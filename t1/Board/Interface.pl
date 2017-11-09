@@ -18,59 +18,82 @@ translate('2_nw', ' ◤ ').
 translate('2_se', ' ◢ ').
 translate('2_sw', ' ◣ ').
 
-display_board():-
+show_board:-
     clearScreen,
+    nb_setval(line, 1),
+    nb_setval(collumn, 1),
     writef('╔═══╦═══╦═══╗   ╔═══╦═══╦═══╗   ╔═══╦═══╦═══╗'),
     nl,
-    display_board(1,1).
+    display_board,
+    !.
 
-display_board(LINE, COLUMN):-
-    LINE < 10,
-    writef('║'),
-    display_line(LINE, COLUMN),
-    display_end_quadrant_v(LINE, COLUMN),
-    nl,
-    LINE1 is LINE+1,
-    display_board(LINE1,COLUMN).
+display_board:-
+    repeat,
+        writef('║'),
+        display_line,
+        display_end_quadrant_v,
+        nl,
+        nb_getval(line,L),
+        Lnew is L+1,
+        nb_setval(line, Lnew),
+        ( Lnew < 10 ->
+            fail
+            ;
+            nl,
+            !
+        ),
+    !.
 
-display_board(10,1):-
-    nl.
+display_line:-
+    repeat,
+        nb_getval(line, L),
+        nb_getval(collumn, C),
+        board(L, C, D),
+        translate(D,D1),
+        writef(D1),
+        writef('║'),
+        display_end_quadrant_h,
+        nb_getval(collumn, C),
+        Cnew is C+1,
+        nb_setval(collumn, Cnew),
+        ( Cnew < 10 ->
+            fail
+            ;
+            nb_setval(collumn, 1),
+            !
+        ),
+    !.
 
-display_line(LINE, COLUMN):-
-    COLUMN< 10,
-    board(LINE, COLUMN, D),
-    translate(D,D1),
-    writef(D1),
-    writef('║'),
-    display_end_quadrant_h(LINE, COLUMN),
-    COLUMN1 is COLUMN+1,
-    display_line(LINE, COLUMN1).
+display_end_quadrant_h:-
+    nb_getval(collumn, C),
+    ((C == 3;  C == 6) ->
+        writef(' '),
+        nb_getval(line, L),
+        L1 is 10 - L,
+        write(L1),
+        writef(' ║')
+        ;
+        true
+    ),
+    !.
 
-display_line(_, 10).
 
-display_end_quadrant_h(LINE, COLUMN):-
-    ( COLUMN = 3;  COLUMN = 6),
-    writef(' '),
-    LINE1 is 10 - LINE,
-    write(LINE1),
-    writef(' ║').
-
-display_end_quadrant_h(_, _).
-
-display_end_quadrant_v(LINE, _):-
-    LINE = 9,
-    nl,
-    writef('╚═══╩═══╩═══╝   ╚═══╩═══╩═══╝   ╚═══╩═══╩═══╝').
-
-display_end_quadrant_v(LINE, _):-
-    ( LINE = 3;  LINE = 6),
-    nl,
-    writef('╚═══╩═══╩═══╝   ╚═══╩═══╩═══╝   ╚═══╩═══╩═══╝'),
-    nl,
-    writef('  a   b   c       d   e   f       g   h   i'),
-    nl,
-    writef('╔═══╦═══╦═══╗   ╔═══╦═══╦═══╗   ╔═══╦═══╦═══╗').
-
-display_end_quadrant_v(_, _):-
-    nl,
-    writef('╠═══╬═══╬═══╣   ╠═══╬═══╬═══╣   ╠═══╬═══╬═══╣').
+display_end_quadrant_v:-
+    nb_getval(line, L),
+    (( L == 3;  L == 6) ->
+            nl,
+            writef('╚═══╩═══╩═══╝   ╚═══╩═══╩═══╝   ╚═══╩═══╩═══╝'),
+            nl,
+            writef('  a   b   c       d   e   f       g   h   i'),
+            nl,
+            writef('╔═══╦═══╦═══╗   ╔═══╦═══╦═══╗   ╔═══╦═══╦═══╗')
+            ;
+            (L == 9 ->
+                nl,
+                writef('╚═══╩═══╩═══╝   ╚═══╩═══╩═══╝   ╚═══╩═══╩═══╝')
+                ;
+                nl,
+                writef('╠═══╬═══╬═══╣   ╠═══╬═══╬═══╣   ╠═══╬═══╬═══╣')
+            )
+    ),
+    !.
