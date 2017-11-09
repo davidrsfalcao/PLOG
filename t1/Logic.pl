@@ -5,13 +5,18 @@ clean_players:-
     !.
 
 init_game:-
-    assert(player(1,'HUMAN')),
-    assert(player(2,'HUMAN')),
     create_board,
     create_board_res,
     !.
 
+clean_game_stuff:-
+    clean_players,
+    clean_board,
+    clean_board_res,
+    !.
+
 play:-
+    init_game,
     nb_setval(player,1),
     repeat,
         nb_getval(player, PLAYER),
@@ -24,8 +29,8 @@ play:-
         write(TMP),
         NextPlayer is TMP +1,
         nb_setval(player, NextPlayer),
-        fail.
-
+        fail,
+    clean_game_stuff.
 
 
 choose_piece(PLAYER, LINE, COLUMN):-
@@ -55,7 +60,7 @@ choose_line(LINE):-
     write(LINE1),
     ((LINE1 =< 9 , LINE1 >= 1) ->
         !
-        ; show_board, 
+        ; show_board,
         write('\nERROR: Invalid Line. Choose again!'),
         fail
     ),
@@ -98,6 +103,7 @@ move_piece(PLAYER, LINE, COLUMN):-
     power_movement(QUADRANT, PLAYER, POWER),
     player(PLAYER, TYPE),
     repeat,
+    show_board,
     ( TYPE == 'HUMAN' ->
         choose_position_to_move(PLAYER, LINE1, COLUMN1)
         ; %bot

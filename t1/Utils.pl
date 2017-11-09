@@ -1,4 +1,4 @@
-clearScreen :- newLine(50), !.
+clearScreen :- newLine(100), !.
 newLine(Number) :-
 	newLine(0, Number).
 

@@ -1,4 +1,4 @@
-%:- include('Menus.pl').
+:- include('Menus.pl').
 :- include('Board/Board_Game.pl').
 :- include('Board/Board_Results.pl').
 :- include('Board/Interface.pl').
@@ -17,14 +17,5 @@
 
 
 azacru :-
-	init_game,
-	play,
-	clean_players,
-	clean_board,
-	clean_board_res,
+	mainMenu,
 	!.
-
-	%% TIRAR ISTO TUDO DAQUI E METER NUM CICLO
-	%% RECURSIVO DENTRO DA Logic
-	%%
-	%% AQUI DEVEM SER CHAMADOS OS MENUS
