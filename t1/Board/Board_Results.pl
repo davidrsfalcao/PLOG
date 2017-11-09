@@ -1,6 +1,6 @@
 :- dynamic board_res/3.
 
-create_board_res():-
+create_board_res:-
     assert(board_res(1,1,0)),
     assert(board_res(1,2,0)),
     assert(board_res(1,3,0)),
@@ -89,11 +89,13 @@ create_board_res():-
     assert(board_res(9,6,0)),
     assert(board_res(9,7,0)),
     assert(board_res(9,8,0)),
-    assert(board_res(9,9,0)).
+    assert(board_res(9,9,0)),
+    !.
 
 
-clean_board_res():-
-    retractall(board_res(_,_,_)).
+clean_board_res:-
+    retractall(board_res(_,_,_)),
+    !.
 
 tile_belongs_to_player(QUADRANT, LINE, COLUMN, PLAYER):-
     quadrant(QQ,LINE,COLUMN),

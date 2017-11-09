@@ -1,6 +1,6 @@
 :- dynamic board/3.
 
-create_board():-
+create_board:-
     assert(board(1,1,'2_se')),
     assert(board(1,2,'null')),
     assert(board(1,3,'1_s')),
@@ -89,10 +89,12 @@ create_board():-
     assert(board(9,6,'null')),
     assert(board(9,7,'2_n')),
     assert(board(9,8,'null')),
-    assert(board(9,9,'1_nw')).
+    assert(board(9,9,'1_nw')),
+    !.
 
-clean_board():-
-    retractall(board(_,_,_)).
+clean_board:-
+    retractall(board(_,_,_)),
+    !.
 
 % piece(name piece, player)
 piece('1_n',1).

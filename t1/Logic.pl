@@ -1,7 +1,8 @@
 :- dynamic player/2.
 
-clean_players():-
-    retractall(player(_,_)).
+clean_players:-
+    retractall(player(_,_)),
+    !.
 
 
 choose_piece(PLAYER, LINE, COLUMN):-
@@ -76,10 +77,35 @@ move_piece(PLAYER, LINE, COLUMN):-
         ; %bot
         write("BOT")
     ),
-    (verify_movement(PLAYER, LINE_A, COLUMN_A, LINE1, COLUMN1, POWER) ->
+    (verify_movement(PLAYER, LINE_A, COLUMN_A, LINE1, COLUMN1, POWER, DIR_A) ->
         !
         ; fail
-    ).
+    ),
+    board(LINE_A, COLUMN_A, PIECE),
+    retract(board(LINE_A, COLUMN_A, PIECE)),
+    board_res(LINE_A, COLUMN_A, PIECE1),
+    ( PIECE1 == 0 ->
+        assert(board(LINE_A, COLUMN_A, 'null'))
+        ;
+        ( PIECE1 == 1 ->
+            assert(board(LINE_A, COLUMN_A, '1'))
+            ;
+            assert(board(LINE_A, COLUMN_A, '2'))
+        )
+    ),
+
+
+    retract(board_res(LINE1, COLUMN1, _)),
+    ( PLAYER == 1 ->
+        assert(board_res(LINE1, COLUMN1, 1))
+        ;
+        assert(board_res(LINE1, COLUMN1, 2))
+    ),
+
+    retract(board(LINE1, COLUMN1, _)),
+    (direction(PIECE2,DIR_A), piece(PIECE2, PLAYER)),
+    assert(board(LINE1, COLUMN1,PIECE2)).
+
 
 calculate_direction(LINE_A, COLUMN_A, LINE1, COLUMN1, DIR):-
     D_YY is LINE_A - LINE1,
@@ -107,7 +133,7 @@ calculate_direction(LINE_A, COLUMN_A, LINE1, COLUMN1, DIR):-
 
 
 
-verify_movement(PLAYER, LINE_A, COLUMN_A, LINE1, COLUMN1, POWER):-
+verify_movement(PLAYER, LINE_A, COLUMN_A, LINE1, COLUMN1, POWER, DIR):-
     DIF_L is LINE_A - LINE1,
     abs(DIF_L, X),
     X =< POWER,

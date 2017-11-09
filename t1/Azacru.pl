@@ -22,9 +22,11 @@ azacru :-
 	assert(player(2,'HUMAN')),
 	create_board,
 	create_board_res,
-	display_board,
+	show_board,
 	choose_piece(1,LINE, COLUMN),
 	move_piece(1, LINE, COLUMN),
-	clean_players(),
+	show_board,
+	clean_players,
 	clean_board,
-	clean_board_res.
+	clean_board_res,
+	!.
