@@ -16,7 +16,6 @@
 %                                %
 
 
-
 azacru :-
 	assert(player(1,'HUMAN')),
 	assert(player(2,'HUMAN')),

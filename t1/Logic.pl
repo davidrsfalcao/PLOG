@@ -19,7 +19,10 @@ choose_piece(PLAYER, LINE, COLUMN):-
         write('\nERROR: Choose a valid piece'),
         nl,
         fail
-    ).
+    ),
+    possible_moves_piece(LINE, COLUMN, _).
+    %write("COUNTER: "),
+    %write(COUNTER).
 
 choose_line(LINE):-
     repeat,
@@ -132,8 +135,6 @@ calculate_direction(LINE_A, COLUMN_A, LINE1, COLUMN1, DIR):-
     direction_mov(D_Y, D_X, DIR).
 
 
-
-
 verify_movement(PLAYER, LINE_A, COLUMN_A, LINE1, COLUMN1, POWER, DIR):-
     DIF_L is LINE_A - LINE1,
     abs(DIF_L, X),
@@ -148,3 +149,83 @@ verify_movement(PLAYER, LINE_A, COLUMN_A, LINE1, COLUMN1, POWER, DIR):-
     possible_direction(DIR_A, DIR),
     position_is_free_to_move(PLAYER, LINE1, COLUMN1).
     %% FALTA VERIFICAR SE NÃO HÁ PEÇAS PELO CAMINHO
+
+possible_moves_piece(LINE, COLUMN, LIST_MOVE):-
+    board(LINE, COLUMN, PIECE),
+    piece(PIECE, PLAYER),
+    quadrant(QUADRANT, LINE, COLUMN),
+    power_movement(QUADRANT, PLAYER, POWER),
+    nb_setval(list_movements, [[]]),
+    % VERIFICA SE O LIMITE ESQUERDO É MAIOR QUE 0
+    LL1 is COLUMN - POWER,
+    ( LL1 < 1 ->
+        LL is 1
+        ;
+        LL is LL1
+    ),
+
+    % VERIFICA SE O LIMITE DIREITO É MENOR QUE 10
+    LR1 is COLUMN + POWER,
+    ( LR1 > 9 ->
+        LR is 9
+        ;
+        LR is LR1
+    ),
+
+    % VERIFICA SE O LIMITE SUPERIOR É MAIOR QUE 0
+    LU1 is LINE - POWER,
+    ( LU1 < 1 ->
+        LU is 1
+        ;
+        LU is LU1
+    ),
+
+    % VERIFICA SE O LIMITE INFERIOR É MENOR QUE 10
+    LD1 is LINE + POWER,
+    ( LD1 > 9 ->
+        LD is 9
+        ;
+        LD is LD1
+    ),
+    nb_setval(cont_l, LU),
+    nb_setval(cont_c, LL),
+
+    repeat,
+        nb_getval(cont_l, L),
+        possible_moves_piece_line(PLAYER, LINE, COLUMN, L, POWER, LR, LL),
+        nb_getval(cont_l, H),
+        ( H > LD ->
+            !
+            ;
+            fail
+        ),
+    nb_getval(list_movements, LIST_TMP),
+    nth0(0, LIST_TMP, ELEM),
+    delete(LIST_TMP, ELEM, LIST_MOVE),
+    write(LIST_MOVE),nl.
+
+possible_moves_piece_line(PLAYER, LINE, COLUMN, L, POWER, LR, LL):-
+    repeat,
+        nb_getval(cont_c, C),
+        (verify_movement(PLAYER, LINE, COLUMN, L, C, POWER, _) ->
+            make_list_of_move(PLAYER, LINE, COLUMN, L, C, RESULT),
+            nb_getval(list_movements, TEMP),
+            add_list(TEMP, RESULT, FINAL),
+            nb_setval(list_movements, FINAL),
+            K is C + 1,
+            nb_setval(cont_c, K)
+            ;
+            K is C + 1,
+            nb_setval(cont_c, K)
+        ),
+        nb_getval(cont_c, C2),
+        ( C2 > LR ->
+            nb_setval(cont_c, LL),
+            nb_getval(cont_l, I),
+            J is I+1,
+            nb_setval(cont_l, J),
+            !
+            ;
+            fail
+        ),
+        !.
