@@ -17,14 +17,8 @@
 
 
 azacru :-
-	assert(player(1,'HUMAN')),
-	assert(player(2,'HUMAN')),
-	create_board,
-	create_board_res,
-	show_board,
-	choose_piece(1,LINE, COLUMN),
-	move_piece(1, LINE, COLUMN),
-	show_board,
+	init_game,
+	play,
 	clean_players,
 	clean_board,
 	clean_board_res,

@@ -4,6 +4,29 @@ clean_players:-
     retractall(player(_,_)),
     !.
 
+init_game:-
+    assert(player(1,'HUMAN')),
+    assert(player(2,'HUMAN')),
+    create_board,
+    create_board_res,
+    !.
+
+play:-
+    nb_setval(player,1),
+    repeat,
+        nb_getval(player, PLAYER),
+        get_all_possible_moves,
+        show_board,
+    	choose_piece(PLAYER, LINE, COLUMN),
+        show_board,
+    	move_piece(PLAYER, LINE, COLUMN),
+        TMP is mod(PLAYER,2),
+        write(TMP),
+        NextPlayer is TMP +1,
+        nb_setval(player, NextPlayer),
+        fail.
+
+
 
 choose_piece(PLAYER, LINE, COLUMN):-
     repeat,
@@ -16,16 +39,12 @@ choose_piece(PLAYER, LINE, COLUMN):-
     (piece_belongs_to_player(PLAYER, LINE, COLUMN) ->
         !
         ;
+        show_board,
+        nl,
         write('\nERROR: Choose a valid piece'),
         nl,
         fail
-    ),
-    %possible_moves_piece(LINE, COLUMN),
-    all_possible_moves,
-    nb_getval(list_movements, LB),
-    write(LB),nl.
-    %write("COUNTER: "),
-    %write(COUNTER).
+    ).
 
 choose_line(LINE):-
     repeat,
@@ -36,7 +55,8 @@ choose_line(LINE):-
     write(LINE1),
     ((LINE1 =< 9 , LINE1 >= 1) ->
         !
-        ; write('\nERROR: Invalid Line. Choose again!'),
+        ; show_board, 
+        write('\nERROR: Invalid Line. Choose again!'),
         fail
     ),
     LINE is 10-LINE1.
@@ -51,7 +71,8 @@ choose_column(COLUMN):-
     format('~c',COLUMN2),
     ((COLUMN =< 9 , COLUMN >= 1) ->
         !
-        ; write('\nERROR: Invalid Column. Choose again!'),
+        ; show_board,
+         write('\nERROR: Invalid Column. Choose again!'),
         fail
     ).
 
@@ -99,7 +120,7 @@ move_piece(PLAYER, LINE, COLUMN):-
         )
     ),
 
-    % FALTA VER AS PEÇAS DO MEIO
+    % FALTA VER AS PECAS DO MEIO
 
     retract(board_res(LINE1, COLUMN1, _)),
     ( PLAYER == 1 ->
@@ -148,7 +169,7 @@ verify_movement(PLAYER, LINE_A, COLUMN_A, LINE1, COLUMN1, POWER, DIR):-
     direction(PIECE,DIR_A),
     possible_direction(DIR_A, DIR),
     position_is_free_to_move(PLAYER, LINE1, COLUMN1).
-    %% FALTA VERIFICAR SE NÃO HÁ PEÇAS PELO CAMINHO
+    %% FALTA VERIFICAR SE NAO HA PECAS PELO CAMINHO
 
 possible_moves_piece(LINE, COLUMN):-
     board(LINE, COLUMN, PIECE),
@@ -230,12 +251,12 @@ possible_moves_piece_line(PLAYER, LINE, COLUMN, L, POWER, LR, LL):-
         ),
     !.
 
-all_possible_moves:-
+get_all_possible_moves:-
     nb_setval(list_movements, [[]]),
     nb_setval(cont_ll, 1),
     nb_setval(cont_cc, 1),
     repeat,
-        all_possible_moves_line,
+        get_all_possible_moves_line,
         nb_getval(cont_ll, H),
         ( H > 9 ->
             !
@@ -248,7 +269,7 @@ all_possible_moves:-
     delete(LIST_TMP, ELEM, LIST_MOVE),
     nb_setval(list_movements, LIST_MOVE).
 
-all_possible_moves_line:-
+get_all_possible_moves_line:-
     nb_getval(cont_ll, L),
     repeat,
         nb_getval(cont_cc, C),
