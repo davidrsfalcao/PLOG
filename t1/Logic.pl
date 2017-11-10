@@ -1,4 +1,5 @@
 :- dynamic player/2.
+:- use_module(library(time)).
 
 clean_players:-
     retractall(player(_,_)),
@@ -54,8 +55,12 @@ choose_piece(PLAYER, LINE, COLUMN):-
             fail
         )
         ;
+        write('[PLAYER '),
+        write(PLAYER),
+        write('] Choosing a piece to play'),
         bot_choose_piece(PLAYER, LINE, COLUMN)
     ).
+
 
 choose_line(LINE):-
     repeat,

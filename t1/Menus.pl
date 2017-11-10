@@ -72,8 +72,13 @@ menu(X):-
 
 menu(X):-
     X==3,
-    nl,
-    write(' CPU(WHITE) VS CPU(BLACK) '),nl,nl.
+    clearScreen,
+    write('\t\tCPU (WHITE) VS CPU (BLACK) '),
+    newLine(15),
+    sleep(3),
+    assert(player(1,'BOT')),
+    assert(player(2,'BOT')),
+    play.
 
 % -----------------------------------------------------------------------
 % MENU 4 - HOW TO PLAY
