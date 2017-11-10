@@ -57,8 +57,15 @@ menu(X):-
 % Menu 2 - PLAYER(BLACK) VS CPU(WHITE)
 % -----------------------------------------------------------------------
 
-menu(X):-X==2,nl,
-write('PLAYER(WHITE) VS CPU(BLACK) '),nl,nl.
+menu(X):-
+    X==2,
+    clearScreen,
+    write('\t\tPLAYER 1 (WHITE) VS CPU (BLACK) '),
+    newLine(15),
+    sleep(3),
+    assert(player(1,'HUMAN')),
+    assert(player(2,'BOT')),
+    play.
 % -----------------------------------------------------------------------
 % MENU 3 - CPU(BLACK) VS CPU(WHITE)
 % -----------------------------------------------------------------------

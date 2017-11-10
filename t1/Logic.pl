@@ -35,21 +35,26 @@ play:-
 
 
 choose_piece(PLAYER, LINE, COLUMN):-
-    repeat,
-    nl,
-    write('[PLAYER '),
-    write(PLAYER),
-    write('] Choose a piece to play'),
-    choose_line(LINE),
-    choose_column(COLUMN),
-    (piece_belongs_to_player(PLAYER, LINE, COLUMN) ->
-        !
+    player(PLAYER, TYPE),
+    (TYPE == 'HUMAN' ->
+        repeat,
+        nl,
+        write('[PLAYER '),
+        write(PLAYER),
+        write('] Choose a piece to play'),
+        choose_line(LINE),
+        choose_column(COLUMN),
+        (piece_belongs_to_player(PLAYER, LINE, COLUMN) ->
+            !
+            ;
+            show_board,
+            nl,
+            write('\nERROR: Choose a valid piece'),
+            nl,
+            fail
+        )
         ;
-        show_board,
-        nl,
-        write('\nERROR: Choose a valid piece'),
-        nl,
-        fail
+        bot_choose_piece(PLAYER, LINE, COLUMN)
     ).
 
 choose_line(LINE):-
@@ -104,16 +109,16 @@ move_piece(PLAYER, LINE, COLUMN):-
     power_movement(QUADRANT, PLAYER, POWER),
     player(PLAYER, TYPE),
     repeat,
-    show_board,
-    ( TYPE == 'HUMAN' ->
-        choose_position_to_move(PLAYER, LINE1, COLUMN1)
-        ; %bot
-        write("BOT")
-    ),
-    (verify_movement(PLAYER, LINE_A, COLUMN_A, LINE1, COLUMN1, POWER, DIR_A) ->
-        !
-        ; fail
-    ),
+        show_board,
+        ( TYPE == 'HUMAN' ->
+            choose_position_to_move(PLAYER, LINE1, COLUMN1)
+            ; %bot
+            bot_choose_position_to_mov(LINE_A, COLUMN_A, LINE1, COLUMN1)
+        ),
+        (verify_movement(PLAYER, LINE_A, COLUMN_A, LINE1, COLUMN1, POWER, DIR_A) ->
+            !
+            ; fail
+        ),
     board(LINE_A, COLUMN_A, PIECE),
     retract(board(LINE_A, COLUMN_A, PIECE)),
     board_res(LINE_A, COLUMN_A, PIECE1),
@@ -307,11 +312,45 @@ get_all_possible_moves_line:-
 
 number_possible_moves_player(PLAYER, COUNT):-
     nb_getval(list_movements,ALL_MOVES),
-    aggregate_all(count, possible_moves_player(PLAYER, ALL_MOVES, _), COUNT),
+    aggregate_all(count, move_belongs_to_player(PLAYER, ALL_MOVES, _), COUNT),
     !.
 
 
-possible_moves_player(PLAYER, ALL_MOVES, INDEX):-
+move_belongs_to_player(PLAYER, ALL_MOVES, INDEX):-
     nth0(INDEX, ALL_MOVES, ELEM),
     nth0(0, ELEM, PP),
     PLAYER == PP.
+
+possible_moves_player(PLAYER, MOVES):-
+    LIST = [[]],
+    nb_setval(moves_player, LIST),
+    nb_getval(list_movements, LL),
+    nb_setval(index, 0),
+    last(LL, LAST),
+
+    repeat,
+        nb_getval(index, INDEX),
+        nth0(INDEX, LL, E),
+        nth0(0, E, P),
+        ( P == PLAYER ->
+            nb_getval(moves_player, A),
+            make_list_of_list(E, E1),
+            append(A, E1, C),
+            nb_setval(moves_player, C)
+            ;
+            nb_getval(moves_player, A),
+            nb_setval(moves_player, A)
+        ),
+        ( E == LAST ->
+            !
+            ;
+            INDEX1 is INDEX +1,
+            nb_setval(index, INDEX1),
+            fail
+        ),
+
+    nb_getval(moves_player, TMP),
+    nth0(0, TMP, ELEM),
+    delete(TMP, ELEM, LIST_MOVE),
+    nb_setval(moves_player, LIST_MOVE),
+    nb_getval(moves_player, MOVES).

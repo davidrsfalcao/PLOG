@@ -5,6 +5,7 @@
 :- include('Board/Quadrants.pl').
 :- include('Utils.pl').
 :- include('Logic.pl').
+:- include('Bot.pl').
 
 
 %                                %
