@@ -17,6 +17,7 @@ translate('2_ne', ' ◥ ').
 translate('2_nw', ' ◤ ').
 translate('2_se', ' ◢ ').
 translate('2_sw', ' ◣ ').
+translate('X', ' X ').
 
 show_board:-
     clearScreen,

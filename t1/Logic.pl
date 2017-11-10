@@ -21,12 +21,13 @@ play:-
     repeat,
         nb_getval(player, PLAYER),
         get_all_possible_moves,
+        %draw_possible_moves,
         show_board,
     	choose_piece(PLAYER, LINE, COLUMN),
+        %delete_possible_moves,
         show_board,
     	move_piece(PLAYER, LINE, COLUMN),
         TMP is mod(PLAYER,2),
-        write(TMP),
         NextPlayer is TMP +1,
         nb_setval(player, NextPlayer),
         fail,
@@ -214,13 +215,13 @@ possible_moves_piece(LINE, COLUMN):-
         ;
         LD is LD1
     ),
-    nb_setval(cont_l, LU),
-    nb_setval(cont_c, LL),
+    nb_setval(line, LU),
+    nb_setval(column, LL),
 
     repeat,
-        nb_getval(cont_l, L),
+        nb_getval(line, L),
         possible_moves_piece_line(PLAYER, LINE, COLUMN, L, POWER, LR, LL),
-        nb_getval(cont_l, H),
+        nb_getval(line, H),
         ( H > LD ->
             !
             ;
@@ -233,24 +234,24 @@ possible_moves_piece(LINE, COLUMN):-
 
 possible_moves_piece_line(PLAYER, LINE, COLUMN, L, POWER, LR, LL):-
     repeat,
-        nb_getval(cont_c, C),
+        nb_getval(column, C),
         (verify_movement(PLAYER, LINE, COLUMN, L, C, POWER, _) ->
             make_list_of_move(PLAYER, LINE, COLUMN, L, C, RESULT),
             nb_getval(list_movements_piece, TMP),
             add_list(TMP, RESULT, FINAL),
             nb_setval(list_movements_piece, FINAL),
             K is C + 1,
-            nb_setval(cont_c, K)
+            nb_setval(column, K)
             ;
             K is C + 1,
-            nb_setval(cont_c, K)
+            nb_setval(column, K)
         ),
-        nb_getval(cont_c, C2),
+        nb_getval(column, C2),
         ( C2 > LR ->
-            nb_setval(cont_c, LL),
-            nb_getval(cont_l, I),
+            nb_setval(column, LL),
+            nb_getval(line, I),
             J is I+1,
-            nb_setval(cont_l, J),
+            nb_setval(line, J),
             !
             ;
             fail
@@ -259,11 +260,11 @@ possible_moves_piece_line(PLAYER, LINE, COLUMN, L, POWER, LR, LL):-
 
 get_all_possible_moves:-
     nb_setval(list_movements, [[]]),
-    nb_setval(cont_ll, 1),
-    nb_setval(cont_cc, 1),
+    nb_setval(line1, 1),
+    nb_setval(column1, 1),
     repeat,
         get_all_possible_moves_line,
-        nb_getval(cont_ll, H),
+        nb_getval(line1, H),
         ( H > 9 ->
             !
             ;
@@ -276,9 +277,9 @@ get_all_possible_moves:-
     nb_setval(list_movements, LIST_MOVE).
 
 get_all_possible_moves_line:-
-    nb_getval(cont_ll, L),
+    nb_getval(line1, L),
     repeat,
-        nb_getval(cont_cc, C),
+        nb_getval(column1, C),
         board(L, C, PIECE),
         ((piece(PIECE,1) ; piece(PIECE,2)) ->
             possible_moves_piece(L, C),
@@ -287,19 +288,30 @@ get_all_possible_moves_line:-
             append(LISTAA, TMP, FINAL),
             nb_setval(list_movements, FINAL),
             K is C + 1,
-            nb_setval(cont_cc, K)
+            nb_setval(column1, K)
             ;
             K is C + 1,
-            nb_setval(cont_cc, K)
+            nb_setval(column1, K)
         ),
-        nb_getval(cont_cc, C2),
+        nb_getval(column1, C2),
         ( C2 > 9 ->
-            nb_setval(cont_cc, 1),
-            nb_getval(cont_ll, I),
+            nb_setval(column1, 1),
+            nb_getval(line1, I),
             J is I+1,
-            nb_setval(cont_ll, J),
+            nb_setval(line1, J),
             !
             ;
             fail
         ),
     !.
+
+number_possible_moves_player(PLAYER, COUNT):-
+    nb_getval(list_movements,ALL_MOVES),
+    aggregate_all(count, possible_moves_player(PLAYER, ALL_MOVES, _), COUNT),
+    !.
+
+
+possible_moves_player(PLAYER, ALL_MOVES, INDEX):-
+    nth0(INDEX, ALL_MOVES, ELEM),
+    nth0(0, ELEM, PP),
+    PLAYER == PP.
