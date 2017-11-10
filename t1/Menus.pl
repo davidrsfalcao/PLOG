@@ -32,7 +32,7 @@ mainMenu:-
     (menu(R1) ->
         mainMenu
         ;
-        mainMenu
+        true
     ),
     !.
 
@@ -118,4 +118,7 @@ menu(X):-
 % Exit GAME
 % -----------------------------------------------------------------------
 
-menu(X):-X==5,true.
+menu(X):-
+    X==5,
+    menu(9999),
+    true.
