@@ -362,3 +362,35 @@ pass_over_empty_tiles(PLAYER, LINE_A, COLUMN_A, LINE1, COLUMN1, D_X, D_Y):-
             exist_piece_between_move(LINE, COLUMN, LINE1, COLUMN1, D_X, D_Y)
         )
     ).
+
+quadrante_change_direction(PLAYER,LINE1,COLUMN1,DIR_TO_MOV):-
+    player(PLAYER,TYPE),
+    board(LINE1,COLUMN1,PIECE),
+    direction(PIECE,DIR),
+    rotate(DIR,'l',DIR1),
+    rotate(DIR,'r',DIR2),
+    (TYPE == 'HUMAN' ->
+        nl,
+        write('[PLAYER '),
+        write(PLAYER),
+        write('] Choose a direction ('),
+        write(DIR),
+        write('(f),'),
+        write(DIR1),
+        write('(l),'),
+        write(DIR2),
+        write('(r))'),
+        get_single_char(LDIR),
+        (LDIR == 114 ->
+            DIR_ROTATE = 'r'
+            ;
+            (LDIR == 108 ->
+                DIR_ROTATE = 'l'
+                ;
+                DIR_ROTATE = 'f'
+            )
+        ),
+        rotate(DIR,DIR_ROTATE,DIR_TO_MOV)
+        ;
+        bot_change_direction(DIR, DIR1,DIR2, DIR_TO_MOV)
+    ).
