@@ -7,6 +7,7 @@ clean_players:-
 init_game:-
     create_board,
     create_board_res,
+    nb_setval(plays_left,3),
     !.
 
 clean_game_stuff:-
@@ -21,16 +22,18 @@ play:-
     repeat,
         nb_getval(player, PLAYER),
         get_all_possible_moves,
-        draw_possible_moves(PLAYER),
+        %draw_possible_moves(PLAYER),
         show_board,
     	choose_piece(PLAYER, LINE, COLUMN),
-        delete_possible_moves(PLAYER),
+        %delete_possible_moves(PLAYER),
         show_board,
     	move_piece(PLAYER, LINE, COLUMN),
-        TMP is mod(PLAYER,2),
-        NextPlayer is TMP +1,
-        nb_setval(player, NextPlayer),
-        fail,
+        change_player,
+        (not(final) ->
+            fail
+            ;
+            !
+        ),
     clean_game_stuff.
 
 
@@ -142,3 +145,32 @@ move_piece(PLAYER, LINE, COLUMN):-
     retract(board(LINE1, COLUMN1, _)),
     (direction(PIECE2,DIR_A), piece(PIECE2, PLAYER)),
     assert(board(LINE1, COLUMN1,PIECE2)).
+
+change_player:-
+    nb_getval(player, PLAYER),
+    TMP is mod(PLAYER,2),
+    NextPlayer is TMP +1,
+    nb_setval(player, NextPlayer),
+    !.
+
+final:-
+    get_all_possible_moves,
+    nb_getval(list_movements, MOVES),
+    length(MOVES, TAM),
+    TAM == 0,
+    nb_getval(player, PLAYER),
+    nb_getval(plays_left, PLAYS),
+    number_possible_moves_player(PLAYER, COUNT),
+    ( COUNT == 0 ->
+        ( PLAYS == 0 ->
+            true
+            ;
+            P is PLAYS - 1,
+            nb_setval(plays_left, P),
+            change_player,
+            false
+        )
+        ;
+        false
+    ),
+    !.

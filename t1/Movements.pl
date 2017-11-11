@@ -159,6 +159,11 @@ possible_moves_piece(LINE, COLUMN):-
         delete(LIST_TMP, ELEM, LIST_MOVE),
         nb_setval(list_movements_piece, LIST_MOVE).
 
+move_belongs_to_player(PLAYER, ALL_MOVES, INDEX):-
+    nth0(INDEX, ALL_MOVES, ELEM),
+    nth0(0, ELEM, PP),
+    PLAYER == PP.
+
 number_possible_moves_player(PLAYER, COUNT):-
     nb_getval(list_movements,ALL_MOVES),
     aggregate_all(count, move_belongs_to_player(PLAYER, ALL_MOVES, _), COUNT),
@@ -179,11 +184,6 @@ verify_movement(PLAYER, LINE_A, COLUMN_A, LINE1, COLUMN1, POWER, DIR):-
     position_is_free_to_move(PLAYER, LINE1, COLUMN1),
     not(exist_piece_between_move(LINE_A, COLUMN_A, LINE1, COLUMN1)).
     %% FALTA VERIFICAR SE NAO HA PECAS PELO CAMINHO
-
-move_belongs_to_player(PLAYER, ALL_MOVES, INDEX):-
-    nth0(INDEX, ALL_MOVES, ELEM),
-    nth0(0, ELEM, PP),
-    PLAYER == PP.
 
 calculate_direction(LINE_A, COLUMN_A, LINE1, COLUMN1, DIR):-
     D_YY is LINE_A - LINE1,
@@ -230,12 +230,9 @@ exist_piece_between_move(LINE_A, COLUMN_A, LINE1, COLUMN1):-
             D_Y is -1
         )
     ),
-
-    write("HERE"),
     LINE is LINE_A + D_X,
     COLUMN is COLUMN_A + D_Y,
     exist_piece_between_move(LINE, COLUMN, LINE1, COLUMN1, D_X, D_Y).
-
 
 exist_piece_between_move(LINE_A, COLUMN_A, LINE1, COLUMN1, D_X, D_Y):-
     LINE is LINE_A + D_X,
