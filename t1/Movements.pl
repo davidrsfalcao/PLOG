@@ -183,7 +183,6 @@ verify_movement(PLAYER, LINE_A, COLUMN_A, LINE1, COLUMN1, POWER, DIR):-
     possible_direction(DIR_A, DIR),
     position_is_free_to_move(PLAYER, LINE1, COLUMN1),
     not(exist_piece_between_move(LINE_A, COLUMN_A, LINE1, COLUMN1)).
-    %% FALTA VERIFICAR SE NAO HA PECAS PELO CAMINHO
 
 calculate_direction(LINE_A, COLUMN_A, LINE1, COLUMN1, DIR):-
     D_YY is LINE_A - LINE1,

@@ -22,20 +22,21 @@ play:-
     repeat,
         nb_getval(player, PLAYER),
         get_all_possible_moves,
-        %draw_possible_moves(PLAYER),
+        draw_possible_moves(PLAYER),
         show_board,
+        delete_possible_moves(PLAYER),
     	choose_piece(PLAYER, LINE, COLUMN),
-        %delete_possible_moves(PLAYER),
         show_board,
     	move_piece(PLAYER, LINE, COLUMN),
+        show_board,
         change_player,
-        (not(final) ->
-            fail
-            ;
+        (final ->
             !
+            ;
+            fail
         ),
+    score,
     clean_game_stuff.
-
 
 choose_piece(PLAYER, LINE, COLUMN):-
     player(PLAYER, TYPE),
@@ -157,20 +158,61 @@ final:-
     get_all_possible_moves,
     nb_getval(list_movements, MOVES),
     length(MOVES, TAM),
-    TAM == 0,
-    nb_getval(player, PLAYER),
-    nb_getval(plays_left, PLAYS),
-    number_possible_moves_player(PLAYER, COUNT),
-    ( COUNT == 0 ->
-        ( PLAYS == 0 ->
-            true
+    (TAM == 0 ->
+        true
+        ;
+        nb_getval(player, PLAYER),
+        nb_getval(plays_left, PLAYS),
+        number_possible_moves_player(PLAYER, COUNT),
+        ( COUNT == 0 ->
+            ( PLAYS == 0 ->
+                true
+                ;
+                P is PLAYS - 1,
+                nb_setval(plays_left, P),
+                change_player,
+                false
+            )
             ;
-            P is PLAYS - 1,
-            nb_setval(plays_left, P),
-            change_player,
             false
         )
-        ;
-        false
     ),
     !.
+
+score:-
+    clearScreen,
+    calculate_score(1,SCORE1),
+    calculate_score(2,SCORE2),
+
+    ( SCORE1 == SCORE2 ->
+        write("\t\t\t\t     DRAW")
+        ;
+        write("\t\t\t\t    VICTORY"),
+        nl,
+        ( SCORE1 > SCORE2 ->
+            write("\t\t\t     Player 1 wins the game")
+            ;
+            write("\t\t\t     Player 2 wins the game")
+        )
+    ),
+    nl,nl,nl,
+    write("\t\t SCORE \t\t\t\t        SCORE"),nl,
+    write("\t\t  "),
+    write(SCORE1),
+    write("\t\t\t\t\t  "),
+    write(SCORE2),
+
+    newLine(15),
+    write("\t Prima ENTER para sair"),
+    newLine(5),
+    repeat,
+        get_single_char(R),
+        (R == 13 ->
+            !
+            ;
+            fail
+        ),
+    !.
+
+calculate_score(PLAYER, COUNT):-
+    aggregate_all(count, board_res(_,_,PLAYER), COUNT).

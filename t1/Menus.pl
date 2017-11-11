@@ -45,7 +45,7 @@ mainMenu:-
 menu(X):-
     X==1,
     clearScreen,
-    write('\t\tPLAYER 1 (WHITE) VS PLAYER 2 (BLACK) '),
+    write('\t\t\tPLAYER 1 (WHITE) VS PLAYER 2 (BLACK) '),
     newLine(15),
     sleep(3),
     assert(player(1,'HUMAN')),
@@ -60,7 +60,7 @@ menu(X):-
 menu(X):-
     X==2,
     clearScreen,
-    write('\t\tPLAYER 1 (WHITE) VS CPU (BLACK) '),
+    write('\t\t\tPLAYER 1 (WHITE) VS CPU (BLACK) '),
     newLine(15),
     sleep(3),
     assert(player(1,'HUMAN')),
@@ -73,7 +73,7 @@ menu(X):-
 menu(X):-
     X==3,
     clearScreen,
-    write('\t\tCPU (WHITE) VS CPU (BLACK) '),
+    write('\t\t\tCPU (WHITE) VS CPU (BLACK) '),
     newLine(15),
     sleep(3),
     assert(player(1,'BOT')),
