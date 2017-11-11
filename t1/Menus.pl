@@ -27,13 +27,19 @@ mainMenu:-
     write('|______________________________________________________________________________|'),nl,
     nl,nl,
     write('Please choose an option: '),
-    get_single_char(R),
-    ascii_to_dec(R,R1),
-    (menu(R1) ->
-        mainMenu
-        ;
-        true
-    ),
+    repeat,
+        get_single_char(R),
+        ascii_to_dec(R,R1),
+        (menu(R1) ->
+            (R1 == 5 ->
+                !
+                ;
+                mainMenu
+
+            )
+            ;
+            fail
+        ),
     !.
 
 
@@ -120,5 +126,4 @@ menu(X):-
 
 menu(X):-
     X==5,
-    menu(9999),
     true.
