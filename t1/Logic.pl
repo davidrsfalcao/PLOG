@@ -22,10 +22,10 @@ play:-
     repeat,
         nb_getval(player, PLAYER),
         get_all_possible_moves,
-        draw_possible_moves(PLAYER),
+        %draw_possible_moves(PLAYER),
         show_board,
-        delete_possible_moves(PLAYER),
     	choose_piece(PLAYER, LINE, COLUMN),
+        %delete_possible_moves(PLAYER),
         show_board,
     	move_piece(PLAYER, LINE, COLUMN),
         show_board,
@@ -49,14 +49,24 @@ choose_piece(PLAYER, LINE, COLUMN):-
         choose_line(LINE),
         choose_column(COLUMN),
         (piece_belongs_to_player(PLAYER, LINE, COLUMN) ->
-            !
+            possible_moves_piece(LINE, COLUMN),
+            nb_getval(list_movements_piece, MOVES),
+            length(MOVES, TAM),
+            (TAM == 0 ->
+                show_board,
+                write('\nERROR: That piece is stuck'),
+                nl,
+                fail
+                ;
+                !
+            )
             ;
             show_board,
-            nl,
             write('\nERROR: Choose a valid piece'),
             nl,
             fail
         )
+
         ;
         write('[PLAYER '),
         write(PLAYER),
