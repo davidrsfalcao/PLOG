@@ -44,51 +44,65 @@ direction_mov(-1,1,'se').
 direction_mov(-1,-1,'sw').
 
 
-draw_possible_moves:-
-	draw_possible_moves(0),
+draw_possible_moves(PLAYER):-
+	draw_possible_moves(PLAYER,0),
 	!.
 
-draw_possible_moves(INDEX):-
+draw_possible_moves(PLAYER, INDEX):-
 	nb_getval(list_movements,ALL_MOVES),
 	nth0(INDEX, ALL_MOVES, MOV),
-	nth0(3, MOV, LINE),
-	nth0(4, MOV, COLUMN),
-	retract(board(LINE, COLUMN, _)),
-	assert(board(LINE, COLUMN, 'X')),
-	last(ALL_MOVES, LAST),
+	nth0(0, MOV, PP),
+
+	( PLAYER == PP ->
+		nth0(3, MOV, LINE),
+		nth0(4, MOV, COLUMN),
+		retract(board(LINE, COLUMN, _)),
+		assert(board(LINE, COLUMN, 'X')),
+		last(ALL_MOVES, LAST)
+		;
+		last(ALL_MOVES, LAST)
+	),
+
 	(LAST == MOV ->
 		true
 		;
+		write("HERE"),
 		INDEX1 is INDEX +1,
-		draw_possible_moves(INDEX1)
+		draw_possible_moves(PLAYER, INDEX1)
 	).
 
-delete_possible_moves:-
-	delete_possible_moves(0),
+delete_possible_moves(PLAYER):-
+	delete_possible_moves(PLAYER,0),
 	!.
 
-delete_possible_moves(INDEX):-
+delete_possible_moves(PLAYER, INDEX):-
 	nb_getval(list_movements,ALL_MOVES),
 	nth0(INDEX, ALL_MOVES, MOV),
-	nth0(3, MOV, LINE),
-	nth0(4, MOV, COLUMN),
-	retract(board(LINE, COLUMN, _)),
-	board_res(LINE, COLUMN, PIECE),
+	nth0(0, MOV, PP),
 
-	(PIECE == 0 ->
-		PIECE1 = 'null'
-		;
-		( PIECE == 1 ->
-			PIECE1 = '1'
+	( PLAYER == PP ->
+		nth0(3, MOV, LINE),
+		nth0(4, MOV, COLUMN),
+		retract(board(LINE, COLUMN, _)),
+		board_res(LINE, COLUMN, PIECE),
+		(PIECE == 0 ->
+			PIECE1 = 'null'
 			;
-			PIECE = '2'
-		)
+			( PIECE == 1 ->
+				PIECE1 = '1'
+				;
+				PIECE = '2'
+			)
+		),
+		assert(board(LINE, COLUMN, PIECE1)),
+		last(ALL_MOVES, LAST)
+		;
+		last(ALL_MOVES, LAST)
 	),
-	assert(board(LINE, COLUMN, PIECE1)),
-	last(ALL_MOVES, LAST),
+
 	(LAST == MOV ->
 		true
 		;
 		INDEX1 is INDEX +1,
-		delete_possible_moves(INDEX1)
+		delete_possible_moves(PLAYER, INDEX1)
 	).

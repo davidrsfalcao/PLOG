@@ -6,7 +6,7 @@
 :- include('Utils.pl').
 :- include('Logic.pl').
 :- include('Bot.pl').
-
+:- include('Movements.pl').
 
 
 %                                %

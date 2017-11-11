@@ -167,3 +167,8 @@ position_is_free_to_move(PLAYER, LINE1, COLUMN1):-
         tile_belongs_to_player(QQ, LINE1, COLUMN1, PLAYER);
         position_is_empty(LINE1, COLUMN1)
     ).
+
+piece_belongs_to_player(PLAYER, LINE, COLUMN):-
+    board(LINE, COLUMN, PIECE),
+    piece(PIECE, PP),
+    PP == PLAYER.

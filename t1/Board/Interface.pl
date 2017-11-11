@@ -78,7 +78,6 @@ display_end_quadrant_h:-
     ),
     !.
 
-
 display_end_quadrant_v:-
     nb_getval(line, L),
     (( L == 3;  L == 6) ->
