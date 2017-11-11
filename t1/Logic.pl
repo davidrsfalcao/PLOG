@@ -129,10 +129,26 @@ move_piece(PLAYER, LINE, COLUMN):-
         ),
         (verify_movement(PLAYER, LINE_A, COLUMN_A, LINE1, COLUMN1, POWER, DIR_A) ->
             !
-            ; fail
+            ;
+            fail
         ),
-    board(LINE_A, COLUMN_A, PIECE),
-    retract(board(LINE_A, COLUMN_A, PIECE)),
+    pass_over_empty_tiles(LINE_A, COLUMN_A, LINE1, COLUMN1),
+    pass_over_enemies_tiles(LINE_A, COLUMN_A, LINE1, COLUMN1),
+    nb_getval(flag_enemy_passed, F),
+    ( F == 1->
+        retract(board(LINE1, COLUMN1, _)),
+        ( PLAYER == 1 ->
+            assert(board(LINE1, COLUMN1, '1'))
+            ;
+            assert(board(LINE1, COLUMN1, '2'))
+        )
+        ;
+        retract(board(LINE1, COLUMN1, _)),
+        (direction(PIECE2,DIR_A), piece(PIECE2, PLAYER)),
+        assert(board(LINE1, COLUMN1,PIECE2))
+
+    ),
+    retract(board(LINE_A, COLUMN_A, _)),
     board_res(LINE_A, COLUMN_A, PIECE1),
     ( PIECE1 == 0 ->
         assert(board(LINE_A, COLUMN_A, 'null'))
@@ -144,18 +160,12 @@ move_piece(PLAYER, LINE, COLUMN):-
         )
     ),
 
-    % FALTA VER AS PECAS DO MEIO
-
     retract(board_res(LINE1, COLUMN1, _)),
     ( PLAYER == 1 ->
         assert(board_res(LINE1, COLUMN1, 1))
         ;
         assert(board_res(LINE1, COLUMN1, 2))
-    ),
-
-    retract(board(LINE1, COLUMN1, _)),
-    (direction(PIECE2,DIR_A), piece(PIECE2, PLAYER)),
-    assert(board(LINE1, COLUMN1,PIECE2)).
+    ).
 
 change_player:-
     nb_getval(player, PLAYER),
@@ -206,10 +216,10 @@ score:-
         )
     ),
     nl,nl,nl,
-    write("\t\t SCORE \t\t\t\t        SCORE"),nl,
-    write("\t\t  "),
+    write("\t\t PLAYER 1 \t\t\t\tPLAYER 2"),nl,
+    write("\t\t   "),
     write(SCORE1),
-    write("\t\t\t\t\t  "),
+    write("\t\t\t\t\t   "),
     write(SCORE2),
 
     newLine(15),

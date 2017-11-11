@@ -32,23 +32,23 @@ possible_moves_player(PLAYER, MOVES):-
     nb_setval(moves_player, LIST_MOVE),
     nb_getval(moves_player, MOVES).
 
-    get_all_possible_moves:-
-        nb_setval(list_movements, [[]]),
-        nb_setval(line1, 1),
-        nb_setval(column1, 1),
-        repeat,
-            get_all_possible_moves_line,
-            nb_getval(line1, H),
-            ( H > 9 ->
-                !
-                ;
-                fail
-            ),
-        !,
-        nb_getval(list_movements, LIST_TMP),
-        nth0(0, LIST_TMP, ELEM),
-        delete(LIST_TMP, ELEM, LIST_MOVE),
-        nb_setval(list_movements, LIST_MOVE).
+get_all_possible_moves:-
+    nb_setval(list_movements, [[]]),
+    nb_setval(line1, 1),
+    nb_setval(column1, 1),
+    repeat,
+        get_all_possible_moves_line,
+        nb_getval(line1, H),
+        ( H > 9 ->
+            !
+            ;
+            fail
+        ),
+    !,
+    nb_getval(list_movements, LIST_TMP),
+    nth0(0, LIST_TMP, ELEM),
+    delete(LIST_TMP, ELEM, LIST_MOVE),
+    nb_setval(list_movements, LIST_MOVE).
 
 get_all_possible_moves_line:-
     nb_getval(line1, L),
@@ -243,6 +243,121 @@ exist_piece_between_move(LINE_A, COLUMN_A, LINE1, COLUMN1, D_X, D_Y):-
         board(LINE_A, COLUMN_A, PIECE),
         ((piece(PIECE,1) ; piece(PIECE, 2)) ->
             true
+            ;
+            exist_piece_between_move(LINE, COLUMN, LINE1, COLUMN1, D_X, D_Y)
+        )
+    ).
+
+pass_over_enemies_tiles(LINE_A, COLUMN_A, LINE1, COLUMN1):-
+    nb_setval(flag_enemy_passed, 0),
+    board_res(LINE_A, COLUMN_A, PIECE),
+    board_res(LINE1, COLUMN1, PIECE1),
+    ( (PIECE == PIECE1 , (not(PIECE == 0))) ->
+        DIF_L is LINE1 - LINE_A,
+        DIF_C is COLUMN1 - COLUMN_A,
+        ( DIF_L == 0 ->
+            D_X is 0
+            ;
+            ( DIF_L > 0 ->
+                D_X is 1
+                ;
+                D_X is -1
+            )
+        ),
+        ( DIF_C == 0 ->
+            D_Y is 0
+            ;
+            ( DIF_C > 0 ->
+                D_Y is 1
+                ;
+                D_Y is -1
+            )
+        ),
+        LINE is LINE_A + D_X,
+        COLUMN is COLUMN_A + D_Y,
+        PLAYER is PIECE,
+        pass_over_enemies_tiles(PLAYER, LINE, COLUMN, LINE1, COLUMN1, D_X, D_Y)
+        ;
+        true
+    ).
+
+pass_over_enemies_tiles(PLAYER, LINE_A, COLUMN_A, LINE1, COLUMN1, D_X, D_Y):-
+    LINE is LINE_A + D_X,
+    COLUMN is COLUMN_A + D_Y,
+    ( PLAYER == 1 ->
+        ENEMY is 2
+        ;
+        ENEMY is 1
+    ),
+    ((LINE_A == LINE1, COLUMN_A == COLUMN1) ->
+        true
+        ;
+        board_res(LINE_A, COLUMN_A, PIECE),
+        ((PIECE == ENEMY) ->
+            retract(board_res(LINE_A, COLUMN_A, _)),
+            assert(board_res(LINE_A, COLUMN_A, PLAYER)),
+            retract(board(LINE_A, COLUMN_A, _)),
+            (PLAYER == 1 ->
+                assert(board(LINE_A, COLUMN_A, '1'))
+                ;
+                assert(board(LINE_A, COLUMN_A, '2'))
+            ),
+            nb_setval(flag_enemy_passed,1),
+            pass_over_enemies_tiles(PLAYER, LINE, COLUMN, LINE1, COLUMN1, D_X, D_Y)
+            ;
+            pass_over_enemies_tiles(PLAYER, LINE, COLUMN, LINE1, COLUMN1, D_X, D_Y)
+        )
+    ).
+
+pass_over_empty_tiles(LINE_A, COLUMN_A, LINE1, COLUMN1):-
+    board_res(LINE_A, COLUMN_A, PIECE),
+    board_res(LINE1, COLUMN1, PIECE1),
+    ( (PIECE == PIECE1 , (not(PIECE == 0))) ->
+        DIF_L is LINE1 - LINE_A,
+        DIF_C is COLUMN1 - COLUMN_A,
+        ( DIF_L == 0 ->
+            D_X is 0
+            ;
+            ( DIF_L > 0 ->
+                D_X is 1
+                ;
+                D_X is -1
+            )
+        ),
+        ( DIF_C == 0 ->
+            D_Y is 0
+            ;
+            ( DIF_C > 0 ->
+                D_Y is 1
+                ;
+                D_Y is -1
+            )
+        ),
+        LINE is LINE_A + D_X,
+        COLUMN is COLUMN_A + D_Y,
+        PLAYER is PIECE,
+        pass_over_empty_tiles(PLAYER, LINE, COLUMN, LINE1, COLUMN1, D_X, D_Y)
+        ;
+        true
+    ).
+
+pass_over_empty_tiles(PLAYER, LINE_A, COLUMN_A, LINE1, COLUMN1, D_X, D_Y):-
+    LINE is LINE_A + D_X,
+    COLUMN is COLUMN_A + D_Y,
+
+    ((LINE_A == LINE1, COLUMN_A == COLUMN1) ->
+        true
+        ;
+        board_res(LINE_A, COLUMN_A, PIECE),
+        ((PIECE == 0) ->
+            retract(board_res(LINE_A, COLUMN_A,_)),
+            assert(board_res(LINE_A, COLUMN_A, PLAYER)),
+            retract(board(LINE_A, COLUMN_A,_)),
+            ( PLAYER == 1 ->
+                assert(board(LINE_A, COLUMN_A, '1'))
+                ;
+                assert(board(LINE_A, COLUMN_A, '2'))
+            )
             ;
             exist_piece_between_move(LINE, COLUMN, LINE1, COLUMN1, D_X, D_Y)
         )
