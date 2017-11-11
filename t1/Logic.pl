@@ -165,7 +165,16 @@ move_piece(PLAYER, LINE, COLUMN):-
         assert(board_res(LINE1, COLUMN1, 1))
         ;
         assert(board_res(LINE1, COLUMN1, 2))
-    ).
+    ),
+    quadrant(QUADRANT_A,LINE_A,COLUMN_A),
+    quadrant(QUADRANT1,LINE1,COLUMN1),
+    (QUADRANT_A == QUADRANT1 ->
+      !
+      ;quadrante_change_direction(PLAYER,LINE1,COLUMN1,DIR_TO_MOV),
+       retract(board(LINE1,COLUMN1,_)),
+       (direction(P,DIR_TO_MOV),piece(P,PLAYER)),
+       assert(board(LINE1,COLUMN1,P))
+      ).
 
 change_player:-
     nb_getval(player, PLAYER),
@@ -236,3 +245,40 @@ score:-
 
 calculate_score(PLAYER, COUNT):-
     aggregate_all(count, board_res(_,_,PLAYER), COUNT).
+
+
+quadrante_change_direction(PLAYER,LINE1,COLUMN1,DIR_TO_MOV):-
+  player(PLAYER,TYPE),
+  board(LINE1,COLUMN1,PIECE),
+  direction(PIECE,DIR),
+  rotate(DIR,'l',DIR1),
+  rotate(DIR,'r',DIR2),
+  (TYPE == 'HUMAN' ->
+      nl,
+      write('[PLAYER '),
+      write(PLAYER),
+      write('] Choose a direction ('),
+      write(DIR),
+      write('(f),'),
+      write(DIR1),
+      write('(l),'),
+      write(DIR2),
+      write('(r))'),
+      get_single_char(LDIR),
+      (LDIR == 114 ->
+        DIR_ROTATE = 'r'
+        ;(LDIR == 108 ->
+          DIR_ROTATE = 'l'
+          ;DIR_ROTATE = 'f'
+          )
+      ),
+      rotate(DIR,DIR_ROTATE,DIR_TO_MOV)
+      ;random(0,3,RDIR),
+       (RDIR == 0 ->
+         DIR_TO_MOV = DIR
+         ;(RDIR == 1 ->
+           DIR_TO_MOV = DIR1
+           ;DIR_TO_MOV = DIR2
+           )
+         )
+      ).

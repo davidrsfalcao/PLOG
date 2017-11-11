@@ -158,6 +158,31 @@ possible_direction('nw','nw').
 possible_direction('nw','n').
 possible_direction('nw','w').
 
+rotate('n','l','nw').
+rotate('n','r','ne').
+rotate('n','f','n').
+rotate('nw','l','w').
+rotate('nw','r','n').
+rotate('nw','f','nw').
+rotate('w','l','sw').
+rotate('w','r','nw').
+rotate('w','f','w').
+rotate('sw','l','s').
+rotate('sw','r','w').
+rotate('sw','f','sw').
+rotate('s','l','se').
+rotate('s','r','sw').
+rotate('s','f','s').
+rotate('se','l','e').
+rotate('se','r','s').
+rotate('se','f','se').
+rotate('e','l','ne').
+rotate('e','r','se').
+rotate('e','f','e').
+rotate('ne','l','n').
+rotate('ne','r','e').
+rotate('ne','f','ne').
+
 position_is_empty(LINE, COLUMN):-
     board(LINE,COLUMN,'null').
 
