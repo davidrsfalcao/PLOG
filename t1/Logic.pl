@@ -5,7 +5,7 @@ clean_players:-
     retractall(player(_,_)),
     !.
 
-% init dynamic predicates and global varibles required in the game
+% init dynamic facts and global varibles required in the game
 init_game:-
     create_board,
     create_board_res,

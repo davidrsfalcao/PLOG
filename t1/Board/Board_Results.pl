@@ -93,7 +93,7 @@ create_board_res:-
     assert(board_res(9,9,0)),
     !.
 
-% clean all board predicates
+% clean all board_res facts
 clean_board_res:-
     retractall(board_res(_,_,_)),
     !.

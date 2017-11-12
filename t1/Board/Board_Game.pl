@@ -93,7 +93,7 @@ create_board:-
     assert(board(9,9,'1_nw')),
     !.
 
-% clean all board predicates
+% clean all board facts
 clean_board:-
     retractall(board(_,_,_)),
     !.
