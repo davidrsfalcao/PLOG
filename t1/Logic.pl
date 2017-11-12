@@ -35,6 +35,7 @@ play:-
         show_board,
         change_player,
         (final ->
+            write("HERERERERERE"),
             !
             ;
             fail
@@ -182,7 +183,7 @@ move_piece(PLAYER, LINE, COLUMN):-
     ),
     quadrant(QUADRANT_A,LINE_A,COLUMN_A),
     quadrant(QUADRANT1,LINE1,COLUMN1),
-    (QUADRANT_A == QUADRANT1 ->
+    (((QUADRANT_A == QUADRANT1), (F == 0)) ->
         !
         ;
         quadrante_change_direction(PLAYER,LINE1,COLUMN1,DIR_TO_MOV),
@@ -209,15 +210,26 @@ final:-
         ;
         nb_getval(player, PLAYER),
         nb_getval(plays_left, PLAYS),
-        number_possible_moves_player(PLAYER, COUNT),
+        number_possible_moves_player(PLAYER, COUNT),nl,nl,
         ( COUNT == 0 ->
             ( PLAYS == 0 ->
                 true
                 ;
                 P is PLAYS - 1,
                 nb_setval(plays_left, P),
-                change_player,
-                false
+                ( PLAYER == 1 ->
+                    ENEMY is 2
+                    ;
+                    ENEMY is 1
+                ),
+                number_possible_moves_player(ENEMY, C), nl,nl,
+                write(C), nl,nl,
+                ( C == 0 ->
+                    true
+                    ;
+                    change_player,
+                    false
+                )
             )
             ;
             false
