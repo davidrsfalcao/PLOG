@@ -208,8 +208,25 @@ calculate_direction(LINE_A, COLUMN_A, LINE1, COLUMN1, DIR):-
     direction_mov(D_Y, D_X, DIR).
 
 exist_piece_between_move(LINE_A, COLUMN_A, LINE1, COLUMN1):-
+    nb_setval(flag_piece_enemy, 0),
     DIF_L is LINE1 - LINE_A,
     DIF_C is COLUMN1 - COLUMN_A,
+    board_res(LINE_A, COLUMN_A, INIT),
+    board_res(LINE1, COLUMN1, FINAL),
+    board(LINE_A, COLUMN_A, PIECE),
+    piece(PIECE, PLAYER),
+
+    ( ((INIT == FINAL) , (not(INIT == 0))) ->
+        STATE is 1
+        ;
+        STATE is 0
+    ),
+
+    ( PLAYER == 1 ->
+        ENEMY is 2
+        ;
+        ENEMY is 1
+    ),
 
     ( DIF_L == 0 ->
         D_X is 0
@@ -231,9 +248,9 @@ exist_piece_between_move(LINE_A, COLUMN_A, LINE1, COLUMN1):-
     ),
     LINE is LINE_A + D_X,
     COLUMN is COLUMN_A + D_Y,
-    exist_piece_between_move(LINE, COLUMN, LINE1, COLUMN1, D_X, D_Y).
+    exist_piece_between_move(PLAYER, ENEMY, LINE, COLUMN, LINE1, COLUMN1, D_X, D_Y, STATE).
 
-exist_piece_between_move(LINE_A, COLUMN_A, LINE1, COLUMN1, D_X, D_Y):-
+exist_piece_between_move(PLAYER, ENEMY, LINE_A, COLUMN_A, LINE1, COLUMN1, D_X, D_Y, STATE):-
     LINE is LINE_A + D_X,
     COLUMN is COLUMN_A + D_Y,
 
@@ -241,10 +258,23 @@ exist_piece_between_move(LINE_A, COLUMN_A, LINE1, COLUMN1, D_X, D_Y):-
         false
         ;
         board(LINE_A, COLUMN_A, PIECE),
-        ((piece(PIECE,1) ; piece(PIECE, 2)) ->
-            true
+        ( STATE == 1 ->
+            (piece(PIECE,PLAYER) ->
+                true
+                ;
+                (piece(PIECE,ENEMY) ->
+                    nb_setval(flag_piece_enemy, 1),
+                    exist_piece_between_move(PLAYER, ENEMY, LINE, COLUMN, LINE1, COLUMN1, D_X, D_Y, STATE)
+                    ;
+                    exist_piece_between_move(PLAYER, ENEMY, LINE, COLUMN, LINE1, COLUMN1, D_X, D_Y, STATE)
+                )
+            )
             ;
-            exist_piece_between_move(LINE, COLUMN, LINE1, COLUMN1, D_X, D_Y)
+            ((piece(PIECE,1) ; piece(PIECE, 2)) ->
+                true
+                ;
+                exist_piece_between_move(PLAYER, ENEMY, LINE, COLUMN, LINE1, COLUMN1, D_X, D_Y, STATE)
+            )
         )
     ).
 
@@ -252,7 +282,9 @@ pass_over_enemies_tiles(LINE_A, COLUMN_A, LINE1, COLUMN1):-
     nb_setval(flag_enemy_passed, 0),
     board_res(LINE_A, COLUMN_A, PIECE),
     board_res(LINE1, COLUMN1, PIECE1),
-    ( (PIECE == PIECE1 , (not(PIECE == 0))) ->
+    nb_getval(flag_piece_enemy, VAL),
+
+    ( ((PIECE == PIECE1) , (not(PIECE == 0)), (VAL == 0)) ->
         DIF_L is LINE1 - LINE_A,
         DIF_C is COLUMN1 - COLUMN_A,
         ( DIF_L == 0 ->
@@ -312,7 +344,8 @@ pass_over_enemies_tiles(PLAYER, LINE_A, COLUMN_A, LINE1, COLUMN1, D_X, D_Y):-
 pass_over_empty_tiles(LINE_A, COLUMN_A, LINE1, COLUMN1):-
     board_res(LINE_A, COLUMN_A, PIECE),
     board_res(LINE1, COLUMN1, PIECE1),
-    ( (PIECE == PIECE1 , (not(PIECE == 0))) ->
+    nb_getval(flag_piece_enemy, VAL),
+    ( ((PIECE == PIECE1) , (not(PIECE == 0)) , (VAL == 0) ) ->
         DIF_L is LINE1 - LINE_A,
         DIF_C is COLUMN1 - COLUMN_A,
         ( DIF_L == 0 ->
@@ -370,21 +403,30 @@ quadrante_change_direction(PLAYER,LINE1,COLUMN1,DIR_TO_MOV):-
     rotate(DIR,'l',DIR1),
     rotate(DIR,'r',DIR2),
     (TYPE == 'HUMAN' ->
+        show_board,
         nl,
         write('[PLAYER '),
         write(PLAYER),
-        write('] Choose a direction ('),
-        write(DIR),
-        write('(f),'),
-        write(DIR1),
-        write('(l),'),
-        write(DIR2),
-        write('(r))'),
-        get_single_char(LDIR),
-        (LDIR == 114 ->
+        write('] Choose a direction: '),
+        nl,
+        write(' rotate left: ←      maintain: ↑     rotate rigth: → '),
+        repeat,
+    	   get_single_char(R),
+    	   ( R == 27 ->
+               get_single_char(R1),
+               ( R1 == 91 ->
+                   get_single_char(LDIR),
+                   !
+                   ;
+                   fail
+                )
+                ;
+                fail
+            ),
+        (LDIR == 67 ->
             DIR_ROTATE = 'r'
             ;
-            (LDIR == 108 ->
+            (LDIR == 68 ->
                 DIR_ROTATE = 'l'
                 ;
                 DIR_ROTATE = 'f'
