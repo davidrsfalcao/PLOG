@@ -1,5 +1,6 @@
 :- dynamic board_res/3.
 
+% creat the initial board of results
 create_board_res:-
     assert(board_res(1,1,0)),
     assert(board_res(1,2,0)),
@@ -92,11 +93,13 @@ create_board_res:-
     assert(board_res(9,9,0)),
     !.
 
-
+% clean all board predicates
 clean_board_res:-
     retractall(board_res(_,_,_)),
     !.
 
+% verify if a tile belongs to a player
+% tile_belongs_to_player(+ QUADRANT, + LINE, + COLUMN, + PLAYER)
 tile_belongs_to_player(QUADRANT, LINE, COLUMN, PLAYER):-
     quadrant(QQ,LINE,COLUMN),
     QQ == QUADRANT,

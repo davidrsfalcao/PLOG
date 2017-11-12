@@ -16,8 +16,6 @@
 %     in the terminal to run     %
 %                                %
 %                                %
-
-
 azacru :-
 	mainMenu,
 	!.

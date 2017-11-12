@@ -1,3 +1,5 @@
+% get all possible moves of one player
+% possible_moves_player(+ PLAYER, - MOVES)
 possible_moves_player(PLAYER, MOVES):-
     LIST = [[]],
     nb_setval(moves_player, LIST),
@@ -32,6 +34,8 @@ possible_moves_player(PLAYER, MOVES):-
     nb_setval(moves_player, LIST_MOVE),
     nb_getval(moves_player, MOVES).
 
+% get all possible moves in the game
+% result is saved in 'list_movements'
 get_all_possible_moves:-
     nb_setval(list_movements, [[]]),
     nb_setval(line1, 1),
@@ -50,6 +54,7 @@ get_all_possible_moves:-
     delete(LIST_TMP, ELEM, LIST_MOVE),
     nb_setval(list_movements, LIST_MOVE).
 
+% get all possible moves per line
 get_all_possible_moves_line:-
     nb_getval(line1, L),
     repeat,
@@ -79,6 +84,8 @@ get_all_possible_moves_line:-
         ),
     !.
 
+% get possible moves of a piece per line
+% possible_moves_piece_line(+ PLAYER, + LINE, + COLUMN, + L, + POWER, + LR, + LL)
 possible_moves_piece_line(PLAYER, LINE, COLUMN, L, POWER, LR, LL):-
     repeat,
         nb_getval(column, C),
@@ -105,6 +112,9 @@ possible_moves_piece_line(PLAYER, LINE, COLUMN, L, POWER, LR, LL):-
         ),
     !.
 
+% get possible moves of a piece
+% % result is saved in 'list_movements_piece'
+% possible_moves_piece(+ LINE, + COLUMN)
 possible_moves_piece(LINE, COLUMN):-
     board(LINE, COLUMN, PIECE),
     piece(PIECE, PLAYER),
@@ -159,16 +169,22 @@ possible_moves_piece(LINE, COLUMN):-
         delete(LIST_TMP, ELEM, LIST_MOVE),
         nb_setval(list_movements_piece, LIST_MOVE).
 
+% verify if a move (at the list of all possible moves) belongs to the player
+% move_belongs_to_player(+ PLAYER, + ALL_MOVES, + INDEX)
 move_belongs_to_player(PLAYER, ALL_MOVES, INDEX):-
     nth0(INDEX, ALL_MOVES, ELEM),
     nth0(0, ELEM, PP),
     PLAYER == PP.
 
+% calculate the number of possible moves of a player
+% number_possible_moves_player(+ PLAYER, - COUNT)
 number_possible_moves_player(PLAYER, COUNT):-
     nb_getval(list_movements,ALL_MOVES),
     aggregate_all(count, move_belongs_to_player(PLAYER, ALL_MOVES, _), COUNT),
     !.
 
+% verify if a move between (LINE_A, COLUMN_A) and (LINE1, COLUMN1) is possible
+% verify_movement(+ PLAYER, + LINE_A, + COLUMN_A, + LINE1, + COLUMN1, + POWER, - DIR)
 verify_movement(PLAYER, LINE_A, COLUMN_A, LINE1, COLUMN1, POWER, DIR):-
     DIF_L is LINE_A - LINE1,
     abs(DIF_L, X),
@@ -184,6 +200,8 @@ verify_movement(PLAYER, LINE_A, COLUMN_A, LINE1, COLUMN1, POWER, DIR):-
     position_is_free_to_move(PLAYER, LINE1, COLUMN1),
     not(exist_piece_between_move(LINE_A, COLUMN_A, LINE1, COLUMN1)).
 
+% calculate the direction of the movement (LINE_A, COLUMN_A) > (LINE1, COLUMN1)
+% calculate_direction(+ LINE_A, + COLUMN_A, + LINE1, + COLUMN1, - DIR)
 calculate_direction(LINE_A, COLUMN_A, LINE1, COLUMN1, DIR):-
     D_YY is LINE_A - LINE1,
     ( D_YY == 0 ->
@@ -207,6 +225,8 @@ calculate_direction(LINE_A, COLUMN_A, LINE1, COLUMN1, DIR):-
     ),
     direction_mov(D_Y, D_X, DIR).
 
+% verify if exist pieces between the movement (LINE_A, COLUMN_A) > (LINE1, COLUMN1)
+% exist_piece_between_move(+ LINE_A, + COLUMN_A, + LINE1, + COLUMN1)
 exist_piece_between_move(LINE_A, COLUMN_A, LINE1, COLUMN1):-
     nb_setval(flag_piece_enemy, 0),
     DIF_L is LINE1 - LINE_A,
@@ -250,6 +270,8 @@ exist_piece_between_move(LINE_A, COLUMN_A, LINE1, COLUMN1):-
     COLUMN is COLUMN_A + D_Y,
     exist_piece_between_move(PLAYER, ENEMY, LINE, COLUMN, LINE1, COLUMN1, D_X, D_Y, STATE).
 
+% iterative cicle of verification of existance of pieces between movements
+% exist_piece_between_move(+ PLAYER, +ENEMY, +LINE_A, +COLUMN_A, +LINE1, +COLUMN1, +D_X, +D_Y, +STATE)
 exist_piece_between_move(PLAYER, ENEMY, LINE_A, COLUMN_A, LINE1, COLUMN1, D_X, D_Y, STATE):-
     LINE is LINE_A + D_X,
     COLUMN is COLUMN_A + D_Y,
@@ -278,6 +300,8 @@ exist_piece_between_move(PLAYER, ENEMY, LINE_A, COLUMN_A, LINE1, COLUMN1, D_X, D
         )
     ).
 
+% verify if, in a movement, a player pass over an enemy tile
+% pass_over_enemies_tiles(+ LINE_A, + COLUMN_A, + LINE1, + COLUMN1)
 pass_over_enemies_tiles(LINE_A, COLUMN_A, LINE1, COLUMN1):-
     nb_setval(flag_enemy_passed, 0),
     board_res(LINE_A, COLUMN_A, PIECE),
@@ -313,6 +337,8 @@ pass_over_enemies_tiles(LINE_A, COLUMN_A, LINE1, COLUMN1):-
         true
     ).
 
+% verify if, in a movement, a player pass over an enemy tile (iterative)
+% pass_over_enemies_tiles(+PLAYER, +LINE_A, +COLUMN_A, +LINE1, +COLUMN1, +D_X, +D_Y)
 pass_over_enemies_tiles(PLAYER, LINE_A, COLUMN_A, LINE1, COLUMN1, D_X, D_Y):-
     LINE is LINE_A + D_X,
     COLUMN is COLUMN_A + D_Y,
@@ -341,6 +367,8 @@ pass_over_enemies_tiles(PLAYER, LINE_A, COLUMN_A, LINE1, COLUMN1, D_X, D_Y):-
         )
     ).
 
+% verify if, in a movement, a player pass over an empty tile
+% pass_over_empty_tiles(+ LINE_A, + COLUMN_A, + LINE1, + COLUMN1)
 pass_over_empty_tiles(LINE_A, COLUMN_A, LINE1, COLUMN1):-
     board_res(LINE_A, COLUMN_A, PIECE),
     board_res(LINE1, COLUMN1, PIECE1),
@@ -374,6 +402,8 @@ pass_over_empty_tiles(LINE_A, COLUMN_A, LINE1, COLUMN1):-
         true
     ).
 
+% verify if, in a movement, a player pass over an empty tile (iterative)
+% pass_over_empty_tiles(+ PLAYER, + LINE_A, + COLUMN_A, + LINE1, + COLUMN1, + D_X, + D_Y)
 pass_over_empty_tiles(PLAYER, LINE_A, COLUMN_A, LINE1, COLUMN1, D_X, D_Y):-
     LINE is LINE_A + D_X,
     COLUMN is COLUMN_A + D_Y,
@@ -396,6 +426,8 @@ pass_over_empty_tiles(PLAYER, LINE_A, COLUMN_A, LINE1, COLUMN1, D_X, D_Y):-
         )
     ).
 
+% change (or not) the direction of the piece passing between quadrants borders
+% quadrante_change_direction(+PLAYER, + LINE1, +COLUMN1, -DIR_TO_MOV)
 quadrante_change_direction(PLAYER,LINE1,COLUMN1,DIR_TO_MOV):-
     player(PLAYER,TYPE),
     board(LINE1,COLUMN1,PIECE),

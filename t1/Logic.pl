@@ -1,21 +1,25 @@
 :- dynamic player/2.
 
+% clean all player predicates
 clean_players:-
     retractall(player(_,_)),
     !.
 
+% init dynamic predicates and global varibles required in the game
 init_game:-
     create_board,
     create_board_res,
     nb_setval(plays_left,3),
     !.
 
+% clean all dynamic predicates of the game
 clean_game_stuff:-
     clean_players,
     clean_board,
     clean_board_res,
     !.
 
+% plays the game. Manages the entire game
 play:-
     init_game,
     nb_setval(player,1),
@@ -38,6 +42,8 @@ play:-
     score,
     clean_game_stuff.
 
+% choose a piece to play (user or bot)
+% choose_piece(+ PLAYER, - LINE, - COLUMN)
 choose_piece(PLAYER, LINE, COLUMN):-
     player(PLAYER, TYPE),
     (TYPE == 'HUMAN' ->
@@ -74,6 +80,8 @@ choose_piece(PLAYER, LINE, COLUMN):-
         bot_choose_piece(PLAYER, LINE, COLUMN)
     ).
 
+% the user choose a line
+% choose_line(- LINE)
 choose_line(LINE):-
     repeat,
     nl,
@@ -89,6 +97,8 @@ choose_line(LINE):-
     ),
     LINE is 10-LINE1.
 
+% the user choose a line
+% choose_column(- COLUMN)
 choose_column(COLUMN):-
     repeat,
     nl,
@@ -104,6 +114,8 @@ choose_column(COLUMN):-
         fail
     ).
 
+% choose a position to move
+% choose_position_to_move(+ PLAYER, - LINE, - COLUMN)
 choose_position_to_move(PLAYER, LINE, COLUMN):-
     nl,
     nl,
@@ -114,6 +126,8 @@ choose_position_to_move(PLAYER, LINE, COLUMN):-
     choose_column(COLUMN),
     !.
 
+% move a piece (user or bot)
+% move_piece(+ PLAYER, + LINE, + COLUMN)
 move_piece(PLAYER, LINE, COLUMN):-
     LINE_A is LINE,
     COLUMN_A is COLUMN,
@@ -177,6 +191,7 @@ move_piece(PLAYER, LINE, COLUMN):-
         assert(board(LINE1,COLUMN1,P))
      ).
 
+% alternate between players
 change_player:-
     nb_getval(player, PLAYER),
     TMP is mod(PLAYER,2),
@@ -184,6 +199,7 @@ change_player:-
     nb_setval(player, NextPlayer),
     !.
 
+% verify if the game ends
 final:-
     get_all_possible_moves,
     nb_getval(list_movements, MOVES),
@@ -209,6 +225,7 @@ final:-
     ),
     !.
 
+% displays the score
 score:-
     clearScreen,
     calculate_score(1,SCORE1),
@@ -244,5 +261,7 @@ score:-
         ),
     !.
 
+% calculates the game score of a player
+% calculate_score(+ PLAYER, - COUNT)
 calculate_score(PLAYER, COUNT):-
     aggregate_all(count, board_res(_,_,PLAYER), COUNT).

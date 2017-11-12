@@ -1,3 +1,5 @@
+
+% translate( board symbol, interface symbol)
 translate('null', '   ').
 translate('1', '░░░').
 translate('2', '▓▓▓').
@@ -19,6 +21,7 @@ translate('2_se', ' ◢ ').
 translate('2_sw', ' ◣ ').
 translate('X', ' X ').
 
+% displays the board
 show_board:-
     clearScreen,
     nb_setval(line, 1),
@@ -28,6 +31,7 @@ show_board:-
     display_board,
     !.
 
+% displays board, iterate between lines
 display_board:-
     repeat,
         writef('║'),
@@ -45,6 +49,7 @@ display_board:-
         ),
     !.
 
+% displays a line of the board
 display_line:-
     repeat,
         nb_getval(line, L),
@@ -64,7 +69,7 @@ display_line:-
             !
         ),
     !.
-
+% displays de vertical lines of the end of a quadrant
 display_end_quadrant_h:-
     nb_getval(collumn, C),
     ((C == 3;  C == 6) ->
@@ -78,6 +83,7 @@ display_end_quadrant_h:-
     ),
     !.
 
+% displays de horizontal lines of the end of a quadrant
 display_end_quadrant_v:-
     nb_getval(line, L),
     (( L == 3;  L == 6) ->

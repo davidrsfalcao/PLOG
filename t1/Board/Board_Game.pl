@@ -1,5 +1,6 @@
 :- dynamic board/3.
 
+% creat the initial board
 create_board:-
     assert(board(1,1,'2_se')),
     assert(board(1,2,'null')),
@@ -92,6 +93,7 @@ create_board:-
     assert(board(9,9,'1_nw')),
     !.
 
+% clean all board predicates
 clean_board:-
     retractall(board(_,_,_)),
     !.
@@ -158,6 +160,7 @@ possible_direction('nw','nw').
 possible_direction('nw','n').
 possible_direction('nw','w').
 
+% rotate(atual direction, rotation, final direction)
 rotate('n','l','nw').
 rotate('n','r','ne').
 rotate('n','f','n').
@@ -183,9 +186,13 @@ rotate('ne','l','n').
 rotate('ne','r','e').
 rotate('ne','f','ne').
 
+% verify is a board's position is empty
+% position_is_empty(+ LINE, + COLUMN)
 position_is_empty(LINE, COLUMN):-
     board(LINE,COLUMN,'null').
 
+% verify is a board's position is free to move
+% position_is_free_to_move(+ PLAYER, + LINE1, + COLUMN1)
 position_is_free_to_move(PLAYER, LINE1, COLUMN1):-
     quadrant(QQ, LINE1, COLUMN1),
     (
@@ -195,15 +202,21 @@ position_is_free_to_move(PLAYER, LINE1, COLUMN1):-
     board(LINE1, COLUMN1, PIECE),
     not(piece(PIECE,PLAYER)).
 
+% verify is a board's piece belongs to a certain player
+% piece_belongs_to_player(+ PLAYER, + LINE, + COLUMN)
 piece_belongs_to_player(PLAYER, LINE, COLUMN):-
     board(LINE, COLUMN, PIECE),
     piece(PIECE, PP),
     PP == PLAYER.
 
+% draw all possible moves of a player
+% draw_possible_moves(+ PLAYER)
 draw_possible_moves(PLAYER):-
     draw_possible_moves(PLAYER,0),
     !.
 
+% iterative cicle between all possible moves of a player
+% draw_possible_moves(+ PLAYER, + INDEX)
 draw_possible_moves(PLAYER, INDEX):-
     nb_getval(list_movements,ALL_MOVES), nl, nl,
     write(ALL_MOVES), nl, nl, nl,
@@ -230,10 +243,14 @@ draw_possible_moves(PLAYER, INDEX):-
         )
     ).
 
+% delete of the board all possible moves of a player
+% delete_possible_moves(+ PLAYER)
 delete_possible_moves(PLAYER):-
     delete_possible_moves(PLAYER,0),
     !.
 
+% iterative cicle between all possible moves of a player
+% delete_possible_moves(+ PLAYER, + INDEX)
 delete_possible_moves(PLAYER, INDEX):-
     nb_getval(list_movements,ALL_MOVES),
     length(ALL_MOVES, TAM),

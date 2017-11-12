@@ -117,7 +117,8 @@ quadrant(9,9,7).
 quadrant(9,9,8).
 quadrant(9,9,9).
 
-
+% calculates the player's power of movement in a given quadrant
+% power_movement(+ QUADRANT, + PLAYER, - COUNT)
 power_movement(QUADRANT, PLAYER, COUNT):-
     aggregate_all(count, tile_belongs_to_player(QUADRANT, _, _, PLAYER), CC),
     ( CC == 0 ->
