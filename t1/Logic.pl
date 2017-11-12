@@ -9,7 +9,7 @@ clean_players:-
 init_game:-
     create_board,
     create_board_res,
-    nb_setval(plays_left,3),
+    nb_setval(plays_left,1),
     !.
 
 % clean all dynamic predicates of the game
