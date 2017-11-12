@@ -183,7 +183,8 @@ move_piece(PLAYER, LINE, COLUMN):-
     ),
     quadrant(QUADRANT_A,LINE_A,COLUMN_A),
     quadrant(QUADRANT1,LINE1,COLUMN1),
-    (((QUADRANT_A == QUADRANT1), (F == 0)) ->
+
+    (((QUADRANT_A == QUADRANT1) ; (F == 1)) ->
         !
         ;
         quadrante_change_direction(PLAYER,LINE1,COLUMN1,DIR_TO_MOV),
