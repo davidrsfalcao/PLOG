@@ -422,7 +422,7 @@ pass_over_empty_tiles(PLAYER, LINE_A, COLUMN_A, LINE1, COLUMN1, D_X, D_Y):-
                 assert(board(LINE_A, COLUMN_A, '2'))
             )
             ;
-            exist_piece_between_move(LINE, COLUMN, LINE1, COLUMN1, D_X, D_Y)
+            pass_over_empty_tiles(PLAYER, LINE, COLUMN, LINE1, COLUMN1, D_X, D_Y)
         )
     ).
 
