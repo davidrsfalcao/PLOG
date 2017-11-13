@@ -35,7 +35,6 @@ play:-
         show_board,
         change_player,
         (final ->
-            write("HERERERERERE"),
             !
             ;
             fail
