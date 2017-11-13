@@ -9,11 +9,11 @@ mainMenu:-
     write(' ______________________________________________________________________________ '),nl,
     write('|                                                                              |'),nl,
     write('|                                                                              |'),nl,
-    write('|                     ______               ______    _____   _    _            |'),nl,
-    write('|              \\     |___   |      \\      |   ___|  |  _  | | |  | |           |'),nl,
-    write('|             _ \\       /  /      _ \\     |  |      |   __| | |  | |           |'),nl,
-    write('|            ___ \\    /   /_     ___ \\    |  |___   | || \\  | |__| |           |'),nl,
-    write('|          _/    _\\  |______|  _/    _\\   |______|  |_||__\\ |______|           |'),nl,
+    write('|           █████     ███████     █████     ███████   ███████    ██   ██       |'),nl,
+    write('|          ██   ██        ███    ██   ██    ██        ██   ██    ██   ██       |'),nl,
+    write('|         ██     ██     ███     ██     ██   ██        ███████    ██   ██       |'),nl,
+    write('|         ██ ███ ██   ███       ██ ███ ██   ██        ██  ██     ██   ██       |'),nl,
+    write('|         ██     ██   ███████   ██     ██   ███████   ██    ██   ███████       |'),nl,
     write('|                                                                              |'),nl,
     write('|                                                                              |'),nl,
     write('|                                                                              |'),nl,
@@ -65,6 +65,7 @@ menu(X):-
 
 menu(X):-
     X==2,
+    sub_menu_bot,
     clearScreen,
     write('\t\t\tPLAYER 1 (WHITE) VS CPU (BLACK) '),
     newLine(15),
@@ -78,6 +79,7 @@ menu(X):-
 
 menu(X):-
     X==3,
+    sub_menu_bot,
     clearScreen,
     write('\t\t\tCPU (WHITE) VS CPU (BLACK) '),
     newLine(15),
@@ -127,3 +129,37 @@ menu(X):-
 menu(X):-
     X==5,
     true.
+
+sub_menu_bot:-
+    clearScreen,
+    write(' ______________________________________________________________________________ '),nl,
+    write('|                                                                              |'),nl,
+    write('|                      ██████       ███████     ████████                       |'),nl,
+    write('|                      ██   ██      ██   ██        ██                          |'),nl,
+    write('|                      ██   ██      ██   ██        ██                          |'),nl,
+    write('|                      ██████       ██   ██        ██                          |'),nl,
+    write('|                      ██   ██      ██   ██        ██                          |'),nl,
+    write('|                      ██   ██      ██   ██        ██                          |'),nl,
+    write('|                      ██████       ███████        ██                          |'),nl,
+    write('|                                                                              |'),nl,
+    write('|                                 difficulty                                   |'),nl,
+    write('|                                                                              |'),nl,
+    write('|           1:  Easy                                    2: Hard                |'),nl,
+    write('|                                                                              |'),nl,
+    write('|                                                                              |'),nl,
+    write('|                                                                              |'),nl,
+    write('|                                                                              |'),nl,
+    write('|                                                                              |'),nl,
+    write('|______________________________________________________________________________|'),nl,
+    get_single_char(R),
+    ascii_to_dec(R,R1),
+    ( R1 == 1 ->
+        nb_setval(bot_difficulty, 1)
+        ;
+        ( R1 == 2 ->
+            nb_setval(bot_difficulty, 1)
+            ;
+            sub_menu_bot
+        )
+    ),
+    !.
