@@ -9,9 +9,8 @@ bot_choose_piece(PLAYER, LINE, COLUMN):-
         bot_choose_piece_easy(LINE, COLUMN, MOVES)
         ;
         bot_choose_piece_hard(LINE, COLUMN, MOVES)
-    ).
-
-    %sleep(1). % simulate human's time of reaction
+    ),
+    sleep(1). % simulate human's time of reaction
 
 % the bot choose a piece to move (LVL 1)
 bot_choose_piece_easy(LINE, COLUMN, MOVES):-
