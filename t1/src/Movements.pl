@@ -466,5 +466,5 @@ quadrante_change_direction(PLAYER,LINE1,COLUMN1,DIR_TO_MOV):-
         ),
         rotate(DIR,DIR_ROTATE,DIR_TO_MOV)
         ;
-        bot_change_direction(DIR, DIR1,DIR2, DIR_TO_MOV)
+        bot_change_direction(PLAYER, LINE1, COLUMN1,DIR, DIR1,DIR2, DIR_TO_MOV)
     ).

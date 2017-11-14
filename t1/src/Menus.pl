@@ -157,7 +157,7 @@ sub_menu_bot:-
         nb_setval(bot_difficulty, 1)
         ;
         ( R1 == 2 ->
-            nb_setval(bot_difficulty, 1)
+            nb_setval(bot_difficulty, 2)
             ;
             sub_menu_bot
         )
