@@ -128,6 +128,7 @@ bot_change_direction(PLAYER, LINE1, COLUMN1,DIR, DIR1,DIR2, DIR_TO_MOV):-
         bot_change_direction_hard(PLAYER, LINE1, COLUMN1,DIR, DIR1,DIR2, DIR_TO_MOV)
     ).
 
+% the bot choose a direction(LVL 1)
 bot_change_direction_easy(DIR, DIR1, DIR2, DIR_TO_MOV):-
     random(0,3,RDIR),
     (RDIR == 0 ->
@@ -140,6 +141,7 @@ bot_change_direction_easy(DIR, DIR1, DIR2, DIR_TO_MOV):-
         )
     ).
 
+% the bot choose a direction(LVL 2)
 bot_change_direction_hard(PLAYER, LINE1, COLUMN1,DIR, DIR1,DIR2, DIR_TO_MOV):-
     % BACKUP
     board(LINE1, COLUMN1, PIECE),
