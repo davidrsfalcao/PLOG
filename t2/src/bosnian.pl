@@ -3,6 +3,7 @@
 :-include('utils.pl').
 :-use_module(library(lists)).
 :-use_module(library(clpfd)).
+:- use_module(library(statistics)).
 
 
 start:-
@@ -31,13 +32,41 @@ printStatistictsStatus:-
 
 
 test:-
+    reset_timer,
     Size is 6,
     Size1 is Size*Size,
 
     length(Board, Size1),
     domain(Board, 0,1),
-    calculateSumCol(Board, Size, 0, Sum),
-    Sum #= 3,
-    labeling([], Board),
+
+    % ADD SNAKE HEAD %
+    snakeHead(Head_L, Head_C),
+    calculateIndex(Size, Head_L, Head_C, Index),
+    setElemByIndex(Board,Index, 1),
+
+    % ADD SNAKE TAIL %
+    snakeTail(Tail_L, Tail_C),
+    calculateIndex(Size, Tail_L, Tail_C, Index1),
+    setElemByIndex(Board,Index1, 1),
+
     list_to_matrix(Board, Size, Mat),
-    printMatrix(Mat),nl.
+
+    getElemsLine(Mat, 0, List),
+    getElemsColumn(Mat, 3, List1),
+    getElemsColumn(Mat, 0, List2),
+    getElemsColumn(Mat, 4, List3),
+    getElemsColumn(Mat, 5, List4),
+
+    getElemsAround(Mat, 0, 0, Elems),
+    
+    sum(Elems, #=, 3),
+
+    sum(List, #=, 4),
+    sum(List1, #=, 4),
+    sum(List2, #=, 2),
+    sum(List3, #=, 1),
+    sum(List4, #=, 1),
+    labeling([], Board),
+
+    printMatrix(Mat),nl,
+    print_time.
