@@ -31,9 +31,13 @@ printStatistictsStatus:-
 
 
 test:-
-    %%default_board(Board),
-    %%calculateSumLine(Board, 9, Sum),
-    %%calculateSumCol(Board, 5, Sum),
-    createRandomBoard(6, Board),
-    length(Board, Sum),
-    write(Sum),nl.
+    Size is 6,
+    Size1 is Size*Size,
+
+    length(Board, Size1),
+    domain(Board, 0,1),
+    calculateSumCol(Board, Size, 0, Sum),
+    Sum #= 3,
+    labeling([], Board),
+    list_to_matrix(Board, Size, Mat),
+    printMatrix(Mat),nl.

@@ -1,12 +1,3 @@
-default_board([
-[0,0,0,0,0,0],
-[0,0,1,1,1,1],
-[0,0,0,0,0,0],
-[0,0,0,0,0,0],
-[0,0,0,0,1,0],
-[0,0,0,0,1,0]
-]).
-
 % Sum of line
 % sumLine(+n,+sum)
 sumLine(2,2).
@@ -26,40 +17,45 @@ snakeHead(1,1).
 snakeTail(8,8).
 
 
-% Create random board
-% createRandomBoard(+Size, -Board)
-createRandomBoard(Size, Board):-
-    createRandomBoard(Size, 0, Board).
+list_to_matrix([], _, []).
+list_to_matrix(List, Size, [Row|Matrix]):-
+  list_to_matrix_row(List, Size, Row, Tail),
+  list_to_matrix(Tail, Size, Matrix).
 
-createRandomBoard(Size, Actual_size, [Head|Tail]):-
-    Actual_size < Size,
-    length(Head, Size),
-    Next_size is Actual_size + 1,
-    createRandomBoard(Size, Next_size, Tail).
+list_to_matrix_row(Tail, 0, [], Tail).
+list_to_matrix_row([Item|List], Size, [Item|Row], Tail):-
+  NSize is Size-1,
+  list_to_matrix_row(List, NSize, Row, Tail).
 
-createRandomBoard(_, _, _).
 
 % Calculates the sum of a specific line
-% calculateSumLine(+Board, +Line, -Sum)
-calculateSumLine(Board, Line, Sum):-
-    calculateSumLine(Board, Line, 1, Sum).
+% calculateSumLine(+Board, +Size, +Line, -Sum)
+calculateSumLine(Board, Size, Line, Sum):-
+    Index is Line * Size,
+    IndexF is Index + Size,
+    calculateSumLine(Board, Index, IndexF, Sum, 0).
 
-calculateSumLine([Head|_], Line, Actual_line, Sum):-
-    Line == Actual_line,
-    sumlist(Head, Sum).
+calculateSumLine(_, IndexF, IndexF, Sum, Sum).
 
-calculateSumLine([_|Tail], Line, Actual_line, Sum):-
-    Line \= Actual_line,
-    Next_line is Actual_line + 1,
-    calculateSumLine(Tail, Line, Next_line, Sum).
+calculateSumLine(Board, IndexI, IndexF, Sum, Sum_aux):-
+    nth0(IndexI, Board, Elem),
+    Next_sum #= Sum_aux + Elem,
+    Next_index is IndexI + 1,
+    calculateSumLine(Board, Next_index, IndexF, Sum, Next_sum).
 
-calculateSumLine([], _, _, 0).
 
 % Calculates the sum of a specific column
-% calculateSumCol(+Board, +Column, -Sum)
-calculateSumCol(Board, Column, Sum):-
-    transpose(Board, New_board),
-    calculateSumLine(New_board, Column, 1, Sum).
+%calculateSumCol(+Board, +Size, +Column, -Sum)
+calculateSumCol(Board, Size, Column, Sum):-
+    calculateSumCol(Board, Size, Column, Sum, 0).
 
-%
-% calculateSumAround(Board, Line, Column, Sum):-
+calculateSumCol(_, Size, IndexI, Sum, Sum):-
+    IndexI >= Size.
+
+calculateSumCol(Board, Size, IndexI, Sum, Sum_aux):-
+    TotalSize is Size * Size,
+    IndexI < TotalSize,
+    nth0(IndexI, Board, Elem),
+    Next_sum #= Sum_aux + Elem,
+    Next_index is IndexI + Size,
+    calculateSumCol(Board, Size, Next_index, Sum, Next_sum).
