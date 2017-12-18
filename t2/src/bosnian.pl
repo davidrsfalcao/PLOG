@@ -2,6 +2,7 @@
 :-include('logic.pl').
 :-include('utils.pl').
 :-use_module(library(lists)).
+:-use_module(library(clpfd)).
 
 
 start:-
@@ -30,7 +31,9 @@ printStatistictsStatus:-
 
 
 test:-
-    default_board(Board),
+    %%default_board(Board),
     %%calculateSumLine(Board, 9, Sum),
-    calculateSumCol(Board, 5, Sum),
+    %%calculateSumCol(Board, 5, Sum),
+    createRandomBoard(6, Board),
+    length(Board, Sum),
     write(Sum),nl.
