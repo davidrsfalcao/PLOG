@@ -26,9 +26,9 @@ reset_timer:-
 	statistics(walltime,_).
 
 print_time :-
-		statistics(walltime,[_,T]),
-		TS is (T//10)*10,
-		nl, write('Solution Time: '), write(TS), write('ms'), nl, nl.
+	statistics(walltime, [_, ElapsedTime | _]),
+	nl,
+	format('Solution Time: ~3d seconds',ElapsedTime), nl, nl.
 
 list_to_matrix([], _, []).
 
