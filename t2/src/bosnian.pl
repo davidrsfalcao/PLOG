@@ -1,9 +1,10 @@
-:-include('interface.pl').
-:-include('logic.pl').
-:-include('utils.pl').
 :-use_module(library(lists)).
 :-use_module(library(clpfd)).
 :- use_module(library(statistics)).
+:-include('interface.pl').
+:-include('logic.pl').
+:-include('utils.pl').
+
 
 
 start:-
@@ -54,10 +55,10 @@ test:-
     testHorizontalSum(Mat),
     testVerticalSum(Mat),
     testNeighboursSum(Mat),
-    %testBoardConnection(Mat),
+    testBoardConnection(Mat),
 
 
-    labeling([], Board),
+    labeling([ffc], Board),
 
     printMatrix(Mat),nl,
     print_time.

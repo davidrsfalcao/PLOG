@@ -110,8 +110,7 @@ testNeighboursSum(Board, [Head|T]):-
     nth0(2, Head, Sum),
     nth0(Line, Board, Temp),
     nth0(Column, Temp, Position),
-    Z = [Position],
-    sum(Z, #=, 0),
+    Position #= 0,
     getElemsAround(Board, Line, Column, Elems),
     sum(Elems, #=, Sum),
     testNeighboursSum(Board, T).
@@ -138,27 +137,6 @@ getElemsAdjacent(Board, Line, Column, Elems):-
     findall(L1-C1, adjacent(Line, Column, L1, C1), Temp),
     getElem(Board, Temp, Elems).
 
-% testBoardConnection(Board):-
-%     length(Board, Size),
-%     testBoardConnection(Board, Size, 0).
-%
-% testBoardConnection(_, Size, (Size*Size-1)).
-%
-% testBoardConnection(Board, Size, Index):-
-%     calculateLineColumn(Size, Index, Line, Column),
-%     checkBorders(Line, Column),
-%     getElemsAdjacent(Board, Line, Column, Elems),
-%     sum(Elems, #=, 1), % only has 1 connection
-%     I1 is Index+1,
-%     testBoardConnection(Board, Size, I1).
-%
-% testBoardConnection(Board, Size, Index):-
-%     calculateLineColumn(Size, Index, Line, Column),
-%     \+ checkBorders(Line, Column),
-%     getElemsAdjacent(Board, Line, Column, Elems),
-%     sum(Elems, #=, 2), % has 2 connections
-%     I1 is Index+1,
-%    testBoardConnection(Board, Size, I1).
 
 %Check if a position is the tail or the head of the snake
 % checkBorders(+line,+column)
@@ -166,4 +144,26 @@ checkBorders(L, C):-
     snakeHead(L,C);
     snakeTail(L,C).
 
-testBoardConnection(_).
+testBoardConnection(Board):-
+    findall(Line-Column, (nth0(Line, Board, Tmp),nth0(Column, Tmp, _)), Indexes),
+    testBoardConnection(Board, Indexes).
+
+testBoardConnection(Board, [Line-Column|T]):-
+    checkBorders(Line, Column),
+    getElemsAdjacent(Board, Line, Column, Elems),
+    sum(Elems, #=, 1), % only has 1 connection
+    testBoardConnection(Board, T).
+
+testBoardConnection(Board, [Line-Column|T]):-
+    \+ checkBorders(Line, Column),
+    getElemsAdjacent(Board, Line, Column, Elems),
+    verifyConnection(Board, Line, Column, Elems),
+    testBoardConnection(Board, T).
+
+testBoardConnection(_, []).
+
+verifyConnection(Board, Line, Column, Elems):-
+    nth0(Line,Board,Temp),
+    nth0(Column,Temp,P),
+    (P#=0 #\/ P#=1),
+    sum(Elems,#=,2).
