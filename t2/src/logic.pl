@@ -1,14 +1,17 @@
 % Sum of line
 % sumLine(+n,+sum)
-sumLine(2,2).
-sumLine(5,1).
+sumLine(1,2).
+sumLine(4,1).
 
 % Sum of column
 % sumCol(+n,+sum)
-sumCol(3,3).
-
 sumCol(_,_):-
     false.
+
+% Sum of neighbours
+% sumAround(+line, +column, + sum)
+sumAround(2,4,6).
+sumAround(3,1,6).
 
 % Snake Head (line, column)
 snakeHead(0,0).
@@ -73,3 +76,43 @@ neighbor(L,C, L1, C1):-
 neighbor(L,C, L1, C1):-
     L1 is L+1,
     C1 is C+1.
+
+testHorizontalSum(Board):-
+    findall(Line-Sum, sumLine(Line,Sum),All_Res),
+    testHorizontalSum(Board, All_Res).
+
+testHorizontalSum(Board, [Line-Sum|T]):-
+    getElemsLine(Board, Line, Elems),
+    sum(Elems, #=, Sum),
+    testHorizontalSum(Board, T).
+
+testHorizontalSum(_, []).
+
+
+testVerticalSum(Board):-
+    findall(Column-Sum, sumCol(Column,Sum),All_Res),
+    testVerticalSum(Board, All_Res).
+
+testVerticalSum(Board, [Column-Sum|T]):-
+    getElemsColumn(Board, Column, Elems),
+    sum(Elems, #=, Sum),
+    testVerticalSum(Board, T).
+
+testVerticalSum(_, []).
+
+testNeighboursSum(Board):-
+    findall([Line, Column,Sum], sumAround(Line,Column,Sum),All_Res),
+    testNeighboursSum(Board, All_Res).
+
+testNeighboursSum(Board, [Head|T]):-
+    nth0(0, Head, Line),
+    nth0(1, Head, Column),
+    nth0(2, Head, Sum),
+    nth0(Line, Board, Temp),
+    nth0(Column, Temp, Position),
+    Position #= 0, % The central position must be 0
+    getElemsAround(Board, Line, Column, Elems),
+    sum(Elems, #=, Sum),
+    testNeighboursSum(Board, T).
+
+testNeighboursSum(_, []).

@@ -51,21 +51,11 @@ test:-
 
     list_to_matrix(Board, Size, Mat),
 
-    getElemsLine(Mat, 0, List),
-    getElemsColumn(Mat, 3, List1),
-    getElemsColumn(Mat, 0, List2),
-    getElemsColumn(Mat, 4, List3),
-    getElemsColumn(Mat, 5, List4),
+    testHorizontalSum(Mat),
+    testVerticalSum(Mat),
+    testNeighboursSum(Mat),
 
-    getElemsAround(Mat, 0, 0, Elems),
-    
-    sum(Elems, #=, 3),
 
-    sum(List, #=, 4),
-    sum(List1, #=, 4),
-    sum(List2, #=, 2),
-    sum(List3, #=, 1),
-    sum(List4, #=, 1),
     labeling([], Board),
 
     printMatrix(Mat),nl,
