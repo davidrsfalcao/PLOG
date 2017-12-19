@@ -110,7 +110,8 @@ testNeighboursSum(Board, [Head|T]):-
     nth0(2, Head, Sum),
     nth0(Line, Board, Temp),
     nth0(Column, Temp, Position),
-    Position #= 0, % The central position must be 0
+    Z = [Position],
+    sum(Z, #=, 0),
     getElemsAround(Board, Line, Column, Elems),
     sum(Elems, #=, Sum),
     testNeighboursSum(Board, T).
@@ -137,30 +138,32 @@ getElemsAdjacent(Board, Line, Column, Elems):-
     findall(L1-C1, adjacent(Line, Column, L1, C1), Temp),
     getElem(Board, Temp, Elems).
 
-testBoardConnection(Board):-
-    length(Board, Size),
-    testBoardConnection(Board, Size, 0).
-
-testBoardConnection(_, Size, (Size*Size-1)).
-
-testBoardConnection(Board, Size, Index):-
-    calculateLineColumn(Size, Index, Line, Column),
-    checkBorders(Line, Column),
-    getElemsAdjacent(Board, Line, Column, Elems),
-    sum(Elems, #=, 1), % only has 1 connection
-    I1 is Index+1,
-    testBoardConnection(Board, Size, I1).
-
-testBoardConnection(Board, Size, Index):-
-    calculateLineColumn(Size, Index, Line, Column),
-    \+ checkBorders(Line, Column),
-    getElemsAdjacent(Board, Line, Column, Elems),
-    sum(Elems, #=, 2), % has 2 connections
-    I1 is Index+1,
-    testBoardConnection(Board, Size, I1).
+% testBoardConnection(Board):-
+%     length(Board, Size),
+%     testBoardConnection(Board, Size, 0).
+%
+% testBoardConnection(_, Size, (Size*Size-1)).
+%
+% testBoardConnection(Board, Size, Index):-
+%     calculateLineColumn(Size, Index, Line, Column),
+%     checkBorders(Line, Column),
+%     getElemsAdjacent(Board, Line, Column, Elems),
+%     sum(Elems, #=, 1), % only has 1 connection
+%     I1 is Index+1,
+%     testBoardConnection(Board, Size, I1).
+%
+% testBoardConnection(Board, Size, Index):-
+%     calculateLineColumn(Size, Index, Line, Column),
+%     \+ checkBorders(Line, Column),
+%     getElemsAdjacent(Board, Line, Column, Elems),
+%     sum(Elems, #=, 2), % has 2 connections
+%     I1 is Index+1,
+%    testBoardConnection(Board, Size, I1).
 
 %Check if a position is the tail or the head of the snake
 % checkBorders(+line,+column)
 checkBorders(L, C):-
     snakeHead(L,C);
     snakeTail(L,C).
+
+testBoardConnection(_).
