@@ -45,6 +45,10 @@ list_to_matrix_row([Item|List], Size, [Item|Row], Tail):-
 calculateIndex(Size, Line, Column, Index):-
 	Index is (Size * Line + Column).
 
+calculateLineColumn(Size, Index, Line, Column):-
+	Line is integer(Index/Size),
+	Column is mod(Index,Size).
+
 setElemByIndex(List, Index, Elem):-
 	setElemByIndex(List, Index, 0, Elem).
 

@@ -54,6 +54,7 @@ test:-
     testHorizontalSum(Mat),
     testVerticalSum(Mat),
     testNeighboursSum(Mat),
+    %testBoardConnection(Mat),
 
 
     labeling([], Board),
