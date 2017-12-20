@@ -87,15 +87,11 @@ menu(X, _):-
 menu(_, _):-
     mainMenu(_).
 
-printStatistictsStatus(EnableV):-
-  (EnableV == 1 ->
-    write('    %            4. Statistics:'),
-    write('OFF                                %'),nl
-    ;write('    %            4. Statistics:'),
-    write('ON                                 %'),nl).
+printStatistictsStatus(1):-
+    write('    %            4. Statistics: OFF                               %'),nl.
 
-
-
+printStatistictsStatus(0):-
+    write('    %            4. Statistics: ON                                %'),nl.
 
 
 test:-
