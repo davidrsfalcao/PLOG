@@ -108,32 +108,7 @@ printStatistictsStatus(EnableV):-
 
 
 test:-
-    reset_timer,
-    Size is 6,
-    Size1 is Size*Size,
-
-    length(Board, Size1),
-    domain(Board, 0,1),
-
-    % ADD SNAKE HEAD %
-    snakeHead(Head_L, Head_C),
-    calculateIndex(Size, Head_L, Head_C, Index),
-    setElemByIndex(Board,Index, 1),
-
-    % ADD SNAKE TAIL %
-    snakeTail(Tail_L, Tail_C),
-    calculateIndex(Size, Tail_L, Tail_C, Index1),
-    setElemByIndex(Board,Index1, 1),
-
-    list_to_matrix(Board, Size, Mat),
-
-    testHorizontalSum(Mat),
-    testVerticalSum(Mat),
-    testNeighboursSum(Mat),
-    testBoardConnection(Mat),
-
-
-    labeling([ffc], Board),
-
-    printMatrix(Mat),nl,
+    solveProb(6, Board),
+    printMatrix(Board),nl,
+    fd_statistics,
     print_time.

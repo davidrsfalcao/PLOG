@@ -1,5 +1,13 @@
+% Size of the Board
+% boardSize(+size)
+:-dynamic boardSize/1.
+boardSize(6).
+
 % Sum of line
 % sumLine(+n,+sum)
+sumLine(_,_):-
+    false.
+
 sumLine(1,2).
 sumLine(4,1).
 
@@ -10,15 +18,19 @@ sumCol(_,_):-
 
 % Sum of neighbours
 % sumAround(+line, +column, + sum)
+sumAround(_,_,_):-
+    false.
+
 sumAround(2,4,6).
 sumAround(3,1,6).
 
 % Snake Head (line, column)
+:-dynamic snakeHead/2.
 snakeHead(0,0).
 
 % Snake Tail (line, column)
+:-dynamic snakeTail/2.
 snakeTail(5,5).
-
 
 %Returns all elements of a specific line
 %  getElemsLine(+Board, +Line, -Elems)
@@ -46,24 +58,19 @@ getElem(Board, [_|T], Elems):-
 getElem(_, [], []).
 
 neighbor(L,C, L1, C1):-
-    L1 is L-1,
-    C1 is C-1.
+    L1 is L-1, C1 is C-1.
 
 neighbor(L,C, L1, C1):-
-    L1 is L-1,
-    C1 is C.
+    L1 is L-1,C1 is C.
 
 neighbor(L,C, L1, C1):-
-    L1 is L-1,
-    C1 is C+1.
+    L1 is L-1,C1 is C+1.
 
 neighbor(L,C, L1, C1):-
-    L1 is L,
-    C1 is C-1.
+    L1 is L,C1 is C-1.
 
 neighbor(L,C, L1, C1):-
-    L1 is L,
-    C1 is C+1.
+    L1 is L,C1 is C+1.
 
 neighbor(L,C, L1, C1):-
     L1 is L+1,
@@ -74,8 +81,7 @@ neighbor(L,C, L1, C1):-
     C1 is C.
 
 neighbor(L,C, L1, C1):-
-    L1 is L+1,
-    C1 is C+1.
+    L1 is L+1,C1 is C+1.
 
 testHorizontalSum(Board):-
     findall(Line-Sum, sumLine(Line,Sum),All_Res),
@@ -165,5 +171,33 @@ testBoardConnection(_, []).
 verifyConnection(Board, Line, Column, Elems):-
     nth0(Line,Board,Temp),
     nth0(Column,Temp,P),
-    (P#=0 #\/ P#=1),
-    sum(Elems,#=,2).
+    (P#=0 #/\ H#\=0 )#\/ (P#=1 #/\ H#=2),
+    sum(Elems,#=,H).
+
+% Solves the problem
+%
+solveProb(Size, Board):-
+    reset_timer,
+    Size1 is Size*Size,
+
+    length(List, Size1),
+    domain(List, 0,1),
+
+    % ADD SNAKE HEAD %
+    snakeHead(Head_L, Head_C),
+    calculateIndex(Size, Head_L, Head_C, Index),
+    setElemByIndex(List,Index, 1),
+
+    % ADD SNAKE TAIL %
+    snakeTail(Tail_L, Tail_C),
+    calculateIndex(Size, Tail_L, Tail_C, Index1),
+    setElemByIndex(List,Index1, 1),
+
+    list_to_matrix(List, Size, Board),
+
+    testHorizontalSum(Board),
+    testVerticalSum(Board),
+    testNeighboursSum(Board),
+    testBoardConnection(Board),
+
+    labeling([], List).
