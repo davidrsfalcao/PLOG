@@ -27,74 +27,65 @@ mainMenu(EnableV):-
     write('    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%'),nl,
     nl,nl,
     write('Please choose an option: '),
-    repeat,
-        get_char(R),
-        %dá erro a partir daqui.
-        (menu(R) ->
-            (R == 5 ->
-                !
-                ;
-                mainMenu(EnableV)
-
-            )
-            ;
-            fail
-        ),
-    !.
-
+    read(R),
+    nl,nl,
+    write(R),nl,nl,
+    menu(R, EnableV).
+    %mainMenu(EnableV).
+    %dá erro a partir daqui.
 
 % -----------------------------------------------------------------------
 % Menu 1 - RANDOM PUZZLE
 % -----------------------------------------------------------------------
 
-    menu(X):-
-      X==1,
-      clearScreen,
-      write('\t\t\tRANDOM PUZZLE '),
-      newLine(15).
+menu(X, _):-
+    X==1,
+    clearScreen,
+    write('\t\t\tRANDOM PUZZLE '),
+    newLine(15).
 
 % -----------------------------------------------------------------------
 % Menu 2 - 9X9 PUZZLE
 % -----------------------------------------------------------------------
 
-    menu(X):-
-      X==2,
-      clearScreen,
-      write('\t\t\t9x9 PUZZLE '),
-      newLine(15).
+menu(X, _):-
+    X==2,
+    clearScreen,
+    write('\t\t\t9x9 PUZZLE '),
+    newLine(15).
 
 % -----------------------------------------------------------------------
 % Menu 3 - 12X12 PUZZLE
 % -----------------------------------------------------------------------
 
-    menu(X):-
-      X==3,
-      clearScreen,
-      write('\t\t\t12x12 PUZZLE '),
-      newLine(15).
+menu(X,_):-
+    X==3,
+    clearScreen,
+    write('\t\t\t12x12 PUZZLE '),
+    newLine(15).
 
 % -----------------------------------------------------------------------
 % Menu 4 - STATISTICS
 % -----------------------------------------------------------------------
 
-    menu(X):-
-      X==4,
-      clearScreen,
-      (EnableV == 0 ->
-        EnableV1 is 1,
-        mainMenu(EnableV1)
-        ; EnableV1 is 0,
-        mainMenu(EnableV1)).
+menu(X, EnableV):-
+    X==4,
+    EnableV1 is mod(EnableV+1,2),
+    mainMenu(EnableV1).
 
 % -----------------------------------------------------------------------
 % Exit GAME
 % -----------------------------------------------------------------------
 
-    menu(X):-
-      X==5,
-      true.
+menu(X, _):-
+    X==5,
+    true.
 
-
+% -----------------------------------------------------------------------
+% Invalid Option
+% -----------------------------------------------------------------------
+menu(_, _):-
+    mainMenu(_).
 
 printStatistictsStatus(EnableV):-
   (EnableV == 1 ->
