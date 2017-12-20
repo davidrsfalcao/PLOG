@@ -33,7 +33,7 @@ printStatistictsStatus:-
 
 
 test:-
-    solve(6, Board),
+    solveProb(6, Board),
     printMatrix(Board),nl,
     fd_statistics,
     print_time.

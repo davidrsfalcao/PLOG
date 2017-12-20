@@ -171,12 +171,12 @@ testBoardConnection(_, []).
 verifyConnection(Board, Line, Column, Elems):-
     nth0(Line,Board,Temp),
     nth0(Column,Temp,P),
-    (P#=0 #\/ P#=1),
-    sum(Elems,#=,2).
+    (P#=0 #/\ H#\=0 )#\/ (P#=1 #/\ H#=2),
+    sum(Elems,#=,H).
 
 % Solves the problem
 %
-solve(Size, Board):-
+solveProb(Size, Board):-
     reset_timer,
     Size1 is Size*Size,
 
