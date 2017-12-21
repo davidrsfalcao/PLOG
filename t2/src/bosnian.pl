@@ -8,7 +8,7 @@
 
 
 start:-
-    mainMenu(1),
+    mainMenu(0),
     !.
 
 mainMenu(EnableV):-
@@ -18,8 +18,8 @@ mainMenu(EnableV):-
     write('    %                      Bosnian Snake                          %'),nl,
     write('    %                                                             %'),nl,
     write('    %            1. Random Puzzle                                 %'),nl,
-    write('    %            2. 9x9 Puzzle                                    %'),nl,
-    write('    %            3. 12x12 Puzzle                                  %'),nl,
+    write('    %            2. 6x6 Puzzle                                    %'),nl,
+    write('    %            3. 9x9 Puzzle                                    %'),nl,
     printStatistictsStatus(EnableV),
     write('    %            5. Exit                                          %'),nl,
     write('    %                                                             %'),nl,
@@ -28,11 +28,7 @@ mainMenu(EnableV):-
     nl,nl,
     write('Please choose an option: '),
     read(R),
-    nl,nl,
-    write(R),nl,nl,
     menu(R, EnableV).
-    %mainMenu(EnableV).
-    %dá erro a partir daqui.
 
 % -----------------------------------------------------------------------
 % Menu 1 - RANDOM PUZZLE
@@ -45,24 +41,50 @@ menu(X, _):-
     newLine(15).
 
 % -----------------------------------------------------------------------
-% Menu 2 - 9X9 PUZZLE
+% Menu 2 - 6X6 PUZZLE
 % -----------------------------------------------------------------------
 
-menu(X, _):-
+menu(X, Stats):-
     X==2,
     clearScreen,
-    write('\t\t\t9x9 PUZZLE '),
-    newLine(15).
+    asserta(sumLine(1,2)),
+    asserta(sumLine(4,1)),
+    asserta(sumAround(2,4,6)),
+    asserta(sumAround(3,1,6)),
+    asserta(snakeHead(0,0)),
+    asserta(snakeTail(5,5)),
+    solver(6, Stats),
+    retract(sumLine(1,2)),
+    retract(sumLine(4,1)),
+    retract(sumAround(2,4,6)),
+    retract(sumAround(3,1,6)),
+    retract(snakeHead(0,0)),
+    retract(snakeTail(5,5)).
 
 % -----------------------------------------------------------------------
-% Menu 3 - 12X12 PUZZLE
+% Menu 3 - 9X9 PUZZLE
 % -----------------------------------------------------------------------
 
-menu(X,_):-
+menu(X,Stats):-
     X==3,
     clearScreen,
-    write('\t\t\t12x12 PUZZLE '),
-    newLine(15).
+    asserta(snakeHead(3,3)),
+    asserta(snakeTail(5,5)),
+    asserta(sumCol(6,4)),
+    asserta(sumCol(2,6)),
+    asserta(sumAround(2,6,1)),
+    asserta(sumAround(0,3,3)),
+    asserta(sumAround(6,2,5)),
+    asserta(sumAround(8,5,2)),
+    solver(9,Stats),
+    retract(snakeHead(3,3)),
+    retract(snakeTail(5,5)),
+    retract(sumCol(6,4)),
+    retract(sumCol(2,6)),
+    retract(sumAround(2,6,1)),
+    retract(sumAround(0,3,3)),
+    retract(sumAround(6,2,5)),
+    retract(sumAround(8,5,2)).
 
 % -----------------------------------------------------------------------
 % Menu 4 - STATISTICS
@@ -87,15 +109,21 @@ menu(X, _):-
 menu(_, _):-
     mainMenu(_).
 
-printStatistictsStatus(1):-
+printStatistictsStatus(0):-
     write('    %            4. Statistics: OFF                               %'),nl.
 
-printStatistictsStatus(0):-
+printStatistictsStatus(1):-
     write('    %            4. Statistics: ON                                %'),nl.
 
 
-test:-
-    solveProb(6, Board),
-    printMatrix(Board),nl,
-    fd_statistics,
+printStatisticts(1):-
+    fd_statistics.
+
+printStatisticts(_).
+
+
+solver(Size, Statistics):-
+    solveProb(Size, Board),
+    printMatrix(Board,-1,-1),nl,
+    printStatisticts(Statistics),
     print_time.

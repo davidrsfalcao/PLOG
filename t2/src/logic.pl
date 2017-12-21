@@ -1,36 +1,34 @@
-% Size of the Board
-% boardSize(+size)
-:-dynamic boardSize/1.
-boardSize(6).
-
 % Sum of line
 % sumLine(+n,+sum)
+:-dynamic sumLine/2.
 sumLine(_,_):-
     false.
 
-sumLine(1,2).
-sumLine(4,1).
+%sumLine(1,2).
+%sumLine(4,1).
 
 % Sum of column
 % sumCol(+n,+sum)
+:-dynamic sumCol/2.
 sumCol(_,_):-
     false.
 
 % Sum of neighbours
 % sumAround(+line, +column, + sum)
+:-dynamic sumAround/3.
 sumAround(_,_,_):-
     false.
 
-sumAround(2,4,6).
-sumAround(3,1,6).
+%sumAround(2,4,6).
+%sumAround(3,1,6).
 
 % Snake Head (line, column)
 :-dynamic snakeHead/2.
-snakeHead(0,0).
+%snakeHead(0,0).
 
 % Snake Tail (line, column)
 :-dynamic snakeTail/2.
-snakeTail(5,5).
+%snakeTail(5,5).
 
 %Returns all elements of a specific line
 %  getElemsLine(+Board, +Line, -Elems)
@@ -139,6 +137,23 @@ adjacent(Line,Col,L1,C1):-
     L1 is Line,
     C1 is Col+1.
 
+diagonal(Line,Col,L1,C1):-
+    L1 is Line-1,
+    C1 is Col-1.
+
+diagonal(Line,Col,L1,C1):-
+    L1 is Line+1,
+    C1 is Col+1.
+
+diagonal(Line,Col,L1,C1):-
+    L1 is Line-1,
+    C1 is Col+1.
+
+diagonal(Line,Col,L1,C1):-
+    L1 is Line+1,
+    C1 is Col-1.
+
+
 getElemsAdjacent(Board, Line, Column, Elems):-
     findall(L1-C1, adjacent(Line, Column, L1, C1), Temp),
     getElem(Board, Temp, Elems).
@@ -171,8 +186,59 @@ testBoardConnection(_, []).
 verifyConnection(Board, Line, Column, Elems):-
     nth0(Line,Board,Temp),
     nth0(Column,Temp,P),
-    (P#=0 #/\ H#\=0 )#\/ (P#=1 #/\ H#=2),
-    sum(Elems,#=,H).
+    getElemsAround(Board, Line, Column, Around),
+    preventSquare(Board, Line, Column, Square),
+    sum(Square,#=,S),
+    sum(Around,#=,A),
+    sum(Elems,#=,H),
+    ((P#=0 #/\ H#=<3 #/\ A#=<7) #\/ (P#=1 #/\ H#=2 #/\ S#=<3)),
+    preventCrossing(P, Board,Line, Column).
+
+
+
+preventSquare(Board, Line, Column, Elems):-
+    findall(L-C, square(Line, Column, L, C), Temp),
+    getElem(Board, Temp, Elems).
+
+square(Line, Column, Line, Column).
+
+square(Line, Column, L1, Column):-
+    L1 is Line-1.
+
+square(Line, Column, L1, C1):-
+    L1 is Line-1,
+    C1 is Column-1.
+
+square(Line, Column, Line, C1):-
+    C1 is Column-1.
+
+preventCrossing(P, Board, Line, Column):-
+    findall(L-C, (adjacent(Line, Column, L, C), nth0(L,Board,Temp), nth0(C,Temp, _)) , Adj),
+    findall(L1-C1, diagonal(Line, Column, L1, C1), Diag),
+    findall(LL-CC, (member(LL-CC, Diag), nth0(LL,Board,Temp), nth0(CC, Temp, _)), Diags),
+    preventCrossing1(P, Board, Adj, Diags).
+
+preventCrossing1(P,Board, Adj, [L-_|T]):-
+    \+ nth0(L, Board, _),
+    preventCrossing1(P,Board, Adj, T).
+
+preventCrossing1(P,Board, Adj, [L-C|T]):-
+    nth0(L, Board, Temp),
+    \+ nth0(C, Temp, _),
+    preventCrossing1(P, Board, Adj, T).
+
+preventCrossing1(P,Board, Adj, [L-C|T]):-
+    findall(L1-C1, (adjacent(L, C, L1, C1),nth0(L1,Board, Temp),nth0(C1, Temp, _)), D_Adj),
+    findall(Line-Col, (member(Line-Col, Adj), member(Line-Col,D_Adj)), Interset1),
+    getElem(Board, Interset1, Interset),
+    nth0(L, Board, Temp),
+    nth0(C, Temp, Elem),
+    sum(Interset, #=, Sum),
+    ((Sum#=0 #/\ P#=1) #=> Elem#=0),
+    preventCrossing1(P,Board, Adj, T).
+
+preventCrossing1(_,_, _, []).
+
 
 % Solves the problem
 %

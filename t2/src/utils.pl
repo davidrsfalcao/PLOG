@@ -58,3 +58,22 @@ setElemByIndex([Head|_], Index, Index, Elem):-
 setElemByIndex([_|Tail], Index, I, Elem):-
 	I1 is I+1,
 	setElemByIndex(Tail, Index, I1, Elem).
+
+intersection([], _, []).
+
+intersection([H1|T1], L2, [H1|Res]) :-
+	member(H1, L2),
+	intersection(T1, L2, Res).
+
+intersection([_|T1], L2, Res) :-
+	intersection(T1, L2, Res).
+
+
+disjunction([], _,[]).
+
+disjunction([H1|T1], L2, [H1|Res]) :-
+	disjunction(T1, L2, Res).
+
+disjunction([H1|T1], L2, Res) :-
+	member(H1, L2),
+	disjunction(T1, L2, Res).
