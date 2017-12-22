@@ -1,8 +1,7 @@
 generator:-
-    reset_timer,
     repeat,
-        cleanDynamicStuff,
         write('Creating ...'),nl,
+        cleanDynamicStuff,
         random(5,20, Size),
         randomSnakeBorders(Size),
         randomColumnRestrictions(Size),
@@ -12,8 +11,7 @@ generator:-
         write(Result),nl,
         !,
 
-    (Result = time_out -> generator; printMatrix(Board),true),
-    cleanDynamicStuff.
+    (Result = time_out -> generator; printMatrix(Board),cleanDynamicStuff, true).
 
 
 cleanDynamicStuff:-
@@ -82,7 +80,7 @@ randomAroundRestrictions(Size,Total, I):-
         random(0,Size, Line),
         random(0,Size, Col),
         \+ sumAround(Line,Col,_),
-        random(1,Max, Sum),
+        random(0,Max, Sum),
         asserta(sumAround(Line,Col, Sum)),
         !,
     I1 is I+1,
