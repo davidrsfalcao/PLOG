@@ -7,8 +7,6 @@
 :-include('utils.pl').
 :-include('generator.pl').
 
-
-
 start:-
     mainMenu(0),
     !.
@@ -99,18 +97,20 @@ menu(X, _):-
 menu(_, _):-
     mainMenu(_).
 
+% Print statistics status
 printStatistictsStatus(0):-
     write('    %            4. Statistics: OFF                               %'),nl.
 
 printStatistictsStatus(1):-
     write('    %            4. Statistics: ON                                %'),nl.
 
-
+% Print statistics
 printStatisticts(1):-
     fd_statistics.
 
 printStatisticts(_).
 
+% Solves the problem and displays the solution
 solver(Size, Statistics):-
     solveProb(Size, Board),
     printMatrix(Board),nl,

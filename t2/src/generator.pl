@@ -3,17 +3,21 @@ gen(Size):-
     repeat,
         write('Mais uma voltinha'),nl,
         cleanDynamicStuff,
-        random(5,20, Size),
+        %random(5,20, Size),
+        %Size is 5,
         randomSnakeBorders(Size),
         randomColumnRestrictions(Size),
         write('criando'),nl,
+        Size1 is Size*Size,
+        length(B, Size1),
+        list_to_matrix(B, Size, Mat),
+        printMatrix(Mat),
         solveProb(Size, Board),
         printMatrix(Board),
         !,
 
     %%%%% CLEAN THIS LATER
     cleanDynamicStuff.
-
 
 
 cleanDynamicStuff:-

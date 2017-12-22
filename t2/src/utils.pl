@@ -22,14 +22,18 @@ newLine(_,_).
 ascii_to_dec(N,N1):-
 	N1 is N-48.
 
+% reset the timer
 reset_timer:-
 	statistics(walltime,_).
 
+% Print the elapsed time
 print_time :-
 	statistics(walltime, [_, ElapsedTime | _]),
 	nl,
 	format('Solution Time: ~3d seconds',ElapsedTime), nl, nl.
 
+% Convert a list to matrix
+% list_to_matrix(+list, +matrix_size, -matrix)
 list_to_matrix([], _, []).
 
 list_to_matrix(List, Size, [Row|Matrix]):-

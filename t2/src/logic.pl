@@ -1,27 +1,22 @@
 % Sum of line
 % sumLine(+n,+sum)
 :-dynamic sumLine/2.
-%sumLine(1,2).
-%sumLine(4,1).
 
 % Sum of column
 % sumCol(+n,+sum)
 :-dynamic sumCol/2.
 
 % Sum of neighbours
-% sumAround(+line, +column, + sum)
+% sumAround(+line, +column, ?sum)
 :-dynamic sumAround/3.
 
-%sumAround(2,4,6).
-%sumAround(3,1,6).
-
-% Snake Head (line, column)
+% Snake Head
+% snakeHead(-line, -column)
 :-dynamic snakeHead/2.
-%snakeHead(0,0).
 
-% Snake Tail (line, column)
+% Snake Tail
+% snakeTail(-line, -column)
 :-dynamic snakeTail/2.
-%snakeTail(5,5).
 
 %Returns all elements of a specific line
 %  getElemsLine(+Board, +Line, -Elems)
@@ -34,10 +29,14 @@ getElemsColumn(Board, Column, Elems):-
     transpose(Board, New_Board),
     nth0(Column, New_Board, Elems).
 
+%Returns all elements of a specific column
+%  getElemsAround(+Board, +Line, +Column, -Elems)
 getElemsAround(Board, L, C, Elems):-
     findall(L1-C1, neighbor(L, C, L1, C1), Temp),
     getElem(Board, Temp, Elems).
 
+% Returns all valid elements of a list of pairs
+% getElem(+board, +List, +Elems)
 getElem(Board, [Line-Column|T], [Head|Tail]):-
     nth0(Line, Board, Tmp),
     nth0(Column, Tmp, Head),
@@ -48,6 +47,8 @@ getElem(Board, [_|T], Elems):-
 
 getElem(_, [], []).
 
+% Return the neighbor of a specific position L-C
+% neighbor(+line, +column, -neighbor_line, -neighbor_column)
 neighbor(L,C, L1, C1):-
     L1 is L-1, C1 is C-1.
 
@@ -64,16 +65,16 @@ neighbor(L,C, L1, C1):-
     L1 is L,C1 is C+1.
 
 neighbor(L,C, L1, C1):-
-    L1 is L+1,
-    C1 is C-1.
+    L1 is L+1,C1 is C-1.
 
 neighbor(L,C, L1, C1):-
-    L1 is L+1,
-    C1 is C.
+    L1 is L+1,C1 is C.
 
 neighbor(L,C, L1, C1):-
     L1 is L+1,C1 is C+1.
 
+% Test all horizontal restrictions of the board
+% testHorizontalSum(+ board)
 testHorizontalSum(Board):-
     findall(Line-Sum, sumLine(Line,Sum),All_Res),
     testHorizontalSum(Board, All_Res).
@@ -85,7 +86,8 @@ testHorizontalSum(Board, [Line-Sum|T]):-
 
 testHorizontalSum(_, []).
 
-
+% Test all vertical restrictions of the board
+% testHorizontalSum(+ board)
 testVerticalSum(Board):-
     findall(Column-Sum, sumCol(Column,Sum),All_Res),
     testVerticalSum(Board, All_Res).
@@ -97,6 +99,8 @@ testVerticalSum(Board, [Column-Sum|T]):-
 
 testVerticalSum(_, []).
 
+% Test all around position restrictions of the board
+% testHorizontalSum(+ board)
 testNeighboursSum(Board):-
     findall([Line, Column,Sum], sumAround(Line,Column,Sum),All_Res),
     testNeighboursSum(Board, All_Res).
@@ -114,6 +118,8 @@ testNeighboursSum(Board, [Head|T]):-
 
 testNeighboursSum(_, []).
 
+% Return the position adjacent of a specific position L-C
+% adjacent(+line, +column, -adjacent_line, -adjacent_column)
 adjacent(Line,Col,L1,C1):-
     L1 is Line-1,
     C1 is Col.
@@ -130,6 +136,8 @@ adjacent(Line,Col,L1,C1):-
     L1 is Line,
     C1 is Col+1.
 
+% Return the diagonal of a specific position L-C
+% diagonal(+line, +column, -diagonal_line, -diagonal_column)
 diagonal(Line,Col,L1,C1):-
     L1 is Line-1,
     C1 is Col-1.
@@ -146,7 +154,8 @@ diagonal(Line,Col,L1,C1):-
     L1 is Line+1,
     C1 is Col-1.
 
-
+% Return the diagonal adjacent of a specific position L-C
+% diagonal(+line, +column, -diagonal_line, -diagonal_column)
 getElemsAdjacent(Board, Line, Column, Elems):-
     findall(L1-C1, adjacent(Line, Column, L1, C1), Temp),
     getElem(Board, Temp, Elems).
@@ -158,6 +167,10 @@ checkBorders(L, C):-
     snakeHead(L,C);
     snakeTail(L,C).
 
+% Teste the board connectivity
+% All pieces of the snake must have 2 adjacente pieces, except the borders
+% that must have only 1
+% testBoardConnection(+ board)
 testBoardConnection(Board):-
     findall(Line-Column, (nth0(Line, Board, Tmp),nth0(Column, Tmp, _)), Indexes),
     testBoardConnection(Board, Indexes).
@@ -177,34 +190,28 @@ testBoardConnection(Board, [Line-Column|T]):-
 testBoardConnection(_, []).
 
 verifyConnection(Board, Line, Column, Elems):-
-    nth0(Line,Board,Temp),
-    nth0(Column,Temp,P),
+    getElement(Board, Line, Column, P),
     getElemsAround(Board, Line, Column, Around),
-    preventSquare(Board, Line, Column, Square),
-    sum(Square,#=,S),
     sum(Around,#=,A),
     sum(Elems,#=,H),
-    ((P#=0 #/\ H#=<3 #/\ A#=<7) #\/ (P#=1 #/\ H#=2 #/\ S#=<3)),
+    ((P#=0 #/\ H#=<3 #/\ A#=<7) #\/ (P#=1 #/\ H#=2)),
     preventCrossing(P, Board,Line, Column).
 
+% Returns the element of a position
+% getElement(+ board, +line, +column, -element)
+getElement(Board, Line, Column, Elem):-
+     nth0(Line,Board,Temp),
+     nth0(Column,Temp, Elem).
 
+% Returns true if an element is not a member of a list
+% notMember(+element, +list)
+notMember(A, List):-
+    \+ member(A, List).
 
-preventSquare(Board, Line, Column, Elems):-
-    findall(L-C, square(Line, Column, L, C), Temp),
-    getElem(Board, Temp, Elems).
-
-square(Line, Column, Line, Column).
-
-square(Line, Column, L1, Column):-
-    L1 is Line-1.
-
-square(Line, Column, L1, C1):-
-    L1 is Line-1,
-    C1 is Column-1.
-
-square(Line, Column, Line, C1):-
-    C1 is Column-1.
-
+% Prevents the snake from touching itself on the diagonal
+% For 2 pieces of the snake to touch each other, they must
+% have one and only one adjacent piece in common
+% preventCrossing(+reference_element, +board, +line, +column)
 preventCrossing(P, Board, Line, Column):-
     findall(L-C, (adjacent(Line, Column, L, C), nth0(L,Board,Temp), nth0(C,Temp, _)) , Adj),
     findall(L1-C1, diagonal(Line, Column, L1, C1), Diag),
@@ -234,7 +241,7 @@ preventCrossing1(_,_, _, []).
 
 
 % Solves the problem
-%
+% solveProb(+ board_size, -solution_board)
 solveProb(Size, Board):-
     reset_timer,
     Size1 is Size*Size,
