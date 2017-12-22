@@ -266,4 +266,4 @@ solveProb(Size, Board):-
     testNeighboursSum(Board),
     testBoardConnection(Board),
 
-    labeling([], List).
+    labeling([ffc], List).

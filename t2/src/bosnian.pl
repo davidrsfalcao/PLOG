@@ -2,10 +2,12 @@
 :-use_module(library(clpfd)).
 :-use_module(library(statistics)).
 :-use_module(library(random)).
+:-use_module(library(timeout)).
 :-include('interface.pl').
 :-include('logic.pl').
 :-include('utils.pl').
 :-include('generator.pl').
+
 
 start:-
     mainMenu(0),
@@ -34,11 +36,11 @@ mainMenu(EnableV):-
 % Menu 1 - RANDOM PUZZLE
 % -----------------------------------------------------------------------
 
-menu(X, _):-
+menu(X, Stats):-
     X==1,
     clearScreen,
-    write('\t\t\tRANDOM PUZZLE '),
-    newLine(15).
+    generator,
+    !.
 
 % -----------------------------------------------------------------------
 % Menu 2 - 6X6 PUZZLE
