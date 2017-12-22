@@ -1,9 +1,11 @@
 :-use_module(library(lists)).
 :-use_module(library(clpfd)).
-:- use_module(library(statistics)).
+:-use_module(library(statistics)).
+:-use_module(library(random)).
 :-include('interface.pl').
 :-include('logic.pl').
 :-include('utils.pl').
+:-include('generator.pl').
 
 
 
@@ -54,12 +56,7 @@ menu(X, Stats):-
     asserta(snakeHead(0,0)),
     asserta(snakeTail(5,5)),
     solver(6, Stats),
-    retract(sumLine(1,2)),
-    retract(sumLine(4,1)),
-    retract(sumAround(2,4,6)),
-    retract(sumAround(3,1,6)),
-    retract(snakeHead(0,0)),
-    retract(snakeTail(5,5)).
+    cleanDynamicStuff.
 
 % -----------------------------------------------------------------------
 % Menu 3 - 9X9 PUZZLE
@@ -77,14 +74,7 @@ menu(X,Stats):-
     asserta(sumAround(6,2,5)),
     asserta(sumAround(8,5,2)),
     solver(9,Stats),
-    retract(snakeHead(3,3)),
-    retract(snakeTail(5,5)),
-    retract(sumCol(6,4)),
-    retract(sumCol(2,6)),
-    retract(sumAround(2,6,1)),
-    retract(sumAround(0,3,3)),
-    retract(sumAround(6,2,5)),
-    retract(sumAround(8,5,2)).
+    cleanDynamicStuff.
 
 % -----------------------------------------------------------------------
 % Menu 4 - STATISTICS
@@ -121,9 +111,8 @@ printStatisticts(1):-
 
 printStatisticts(_).
 
-
 solver(Size, Statistics):-
     solveProb(Size, Board),
-    printMatrix(Board,-1,-1),nl,
+    printMatrix(Board),nl,
     printStatisticts(Statistics),
     print_time.

@@ -1,3 +1,6 @@
+printMatrix(Board):-
+    printMatrix(Board,-1,-1).
+
 printMatrix(Board,-1,_):-
     printRowMatrix(Board, -1, -1),
     nl,

@@ -1,23 +1,16 @@
 % Sum of line
 % sumLine(+n,+sum)
 :-dynamic sumLine/2.
-sumLine(_,_):-
-    false.
-
 %sumLine(1,2).
 %sumLine(4,1).
 
 % Sum of column
 % sumCol(+n,+sum)
 :-dynamic sumCol/2.
-sumCol(_,_):-
-    false.
 
 % Sum of neighbours
 % sumAround(+line, +column, + sum)
 :-dynamic sumAround/3.
-sumAround(_,_,_):-
-    false.
 
 %sumAround(2,4,6).
 %sumAround(3,1,6).
