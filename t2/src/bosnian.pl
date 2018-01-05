@@ -40,6 +40,7 @@ menu(X, Stats):-
     X==1,
     clearScreen,
     generator,
+    printStatisticts(Stats),
     !.
 
 % -----------------------------------------------------------------------
