@@ -3,7 +3,8 @@
 ## Index
 
 1. [Azacru](#azacru)
-2. [Developers](#developers)
+2. [Bosnian Snake](#bosnian-snake)
+3. [Developers](#developers)
 
 ***
 
@@ -14,9 +15,11 @@ Main Menu                  |  Bot difficulty
 :-------------------------:|:-------------------------:|
 ![](https://github.com/pmiranda07/PLOG/blob/master/t1/report/Imagem8.png?raw=true)  |  ![](https://github.com/pmiranda07/PLOG/blob/master/t1/report/Imagem9.png?raw=true)  
 
-Initial Game Board          |  After few moves         |  Advanced Game Board
-:-------------------------:|:-------------------------:|:-------------------------:|
-![](https://github.com/pmiranda07/PLOG/blob/master/t1/report/Imagem1.png?raw=true)  |  ![](https://github.com/pmiranda07/PLOG/blob/master/t1/report/Imagem2.png?raw=true) | ![](https://github.com/pmiranda07/PLOG/blob/master/t1/report/Imagem10.png?raw=true) 
+### Bosnian Snake
+
+Main Menu                  |  Resolution Example
+:-------------------------:|:-------------------------:|               
+![](https://github.com/davidrsfalcao/PLOG-FEUP/blob/master/t2/report/Imagem1.png)   |   ![](https://github.com/davidrsfalcao/PLOG-FEUP/blob/master/t2/report/Imagem2.png)
 
 
 ### Developers
